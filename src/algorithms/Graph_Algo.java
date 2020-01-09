@@ -1,6 +1,5 @@
 package algorithms;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-
+import dataStructure.*;
 import oop_dataStructure.*;
 
 
@@ -27,20 +26,19 @@ import oop_dataStructure.*;
  *
  */
 public class Graph_Algo implements graph_algorithms{
-	private oop_graph g;
+	private graph g;
 
 
 	/**
 	 * Default constructor.
 	 */
 	public Graph_Algo() {
-		// TODO Auto-generated constructor stub
 	}
 	/**
 	 * Constructor
 	 * @param graph represents the given graph
 	 */
-	public Graph_Algo(oop_graph graph) {
+	public Graph_Algo(graph graph) {
 		this.g=graph;
 	}
 	/**
@@ -48,7 +46,7 @@ public class Graph_Algo implements graph_algorithms{
 	 * @param g is the given graph
 	 */
 	@Override
-	public void init(oop_graph g) {
+	public void init(graph g) {
 		this.g=g;
 	}
 	/**
@@ -62,7 +60,7 @@ public class Graph_Algo implements graph_algorithms{
 		{    
 			FileInputStream file = new FileInputStream(file_name); 
 			ObjectInputStream in = new ObjectInputStream(file); 
-			g = (oop_graph)in.readObject(); 
+			g = (graph)in.readObject(); 
 			in.close(); 
 			file.close(); 
 		} 
@@ -105,7 +103,7 @@ public class Graph_Algo implements graph_algorithms{
 		if(g.getV()==null)return false;//there are no nodes
 		boolean result=runDFS(g);
 		if(!result) return false;//DFS traversal doesn't visit all nodes.
-		oop_graph tran_g=getTranspose(g);//Create a reversed graph 
+		graph tran_g=getTranspose(g);//Create a reversed graph 
 		result=runDFS(tran_g);//Do DFS for reversed graph starting from the same node as before.
 		return result;
 	}
@@ -118,18 +116,18 @@ public class Graph_Algo implements graph_algorithms{
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		try {
-			for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext();) {
-				oop_node_data n=it.next();
+			for(Iterator<node_data> it=g.getV().iterator();it.hasNext();) {
+				node_data n=it.next();
 				n.setWeight(Double.POSITIVE_INFINITY);
 				n.setInfo("");
 				n.setTag(0);
 			}
 			g.getNode(src).setWeight(0);
-			Queue<oop_node_data> Q = new LinkedList<oop_node_data>();
+			Queue<node_data> Q = new LinkedList<node_data>();
 			Q.add(g.getNode(src));
-			for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext();)
+			for(Iterator<node_data> it=g.getV().iterator();it.hasNext();)
 			{ 
-				oop_node_data v=it.next();
+				node_data v=it.next();
 				if(v.getKey()!=src)
 					Q.add(v);
 			}
@@ -137,10 +135,10 @@ public class Graph_Algo implements graph_algorithms{
 			{
 				int u=findMinNode(Q);
 				g.getNode(u).setTag(1);
-				for(Iterator<oop_edge_data> edgeIt=g.getE(u).iterator();edgeIt.hasNext();)
+				for(Iterator<edge_data> edgeIt=g.getE(u).iterator();edgeIt.hasNext();)
 				{
-					oop_edge_data e=edgeIt.next();
-					oop_node_data e_dest=g.getNode(e.getDest());
+					edge_data e=edgeIt.next();
+					node_data e_dest=g.getNode(e.getDest());
 					if(e_dest.getTag()==0&&e_dest.getWeight()>g.getNode(u).getWeight()+e.getWeight())
 					{
 						e_dest.setWeight(g.getNode(u).getWeight()+e.getWeight());
@@ -148,7 +146,7 @@ public class Graph_Algo implements graph_algorithms{
 					}
 				}	
 			}
-			for(Iterator<oop_node_data> nodeIt=g.getV().iterator();nodeIt.hasNext();) {
+			for(Iterator<node_data> nodeIt=g.getV().iterator();nodeIt.hasNext();) {
 				nodeIt.next().setTag(0);
 			}
 		}
@@ -169,12 +167,12 @@ public class Graph_Algo implements graph_algorithms{
 	 * @return
 	 */
 	@Override
-	public List<oop_node_data> shortestPath(int src, int dest) {
-		List<oop_node_data> path=new ArrayList <oop_node_data>();
+	public List<node_data> shortestPath(int src, int dest) {
+		List<node_data> path=new ArrayList <node_data>();
 		double dist=shortestPathDist(src, dest);
 		if(dist<Double.POSITIVE_INFINITY)// there is a path
 		{
-			oop_node_data v= g.getNode(dest);
+			node_data v= g.getNode(dest);
 			path.add(v);
 			while(!v.getInfo().isEmpty())
 			{
@@ -183,7 +181,7 @@ public class Graph_Algo implements graph_algorithms{
 				v.setInfo("");
 				v=g.getNode(prev_node);
 			}
-			List<oop_node_data> reversed_path=new ArrayList <oop_node_data>();
+			List<node_data> reversed_path=new ArrayList <node_data>();
 			while(path.size()!=0)
 				reversed_path.add(path.remove(path.size()-1));
 			return reversed_path;
@@ -199,13 +197,13 @@ public class Graph_Algo implements graph_algorithms{
 	 * @return the shortest path between those nodes.
 	 */
 	@Override
-	public List<oop_node_data> TSP(List<Integer> targets) 
+	public List<node_data> TSP(List<Integer> targets) 
 	{
 		//NOTE: There is another way (was left as a remark) which give the shortest path between the nodes -Take each one of the nodes
 		// to be a source node, and pick the node with the shortest path. This way take a lot of time so we decided
 		//to pick the source node randomly.
 		if(!haveAPath(targets))return null;// Checks if there a path between these nodes.
-		List<oop_node_data> path=new ArrayList<oop_node_data>();
+		List<node_data> path=new ArrayList<node_data>();
 		//						double tempMin=Double.POSITIVE_INFINITY;
 		//						int currShortestSrcIn=0;
 		//						for(int j=0;j<targets.size();j++) {
@@ -234,10 +232,10 @@ public class Graph_Algo implements graph_algorithms{
 						destIndex=i;
 					}
 				}
-				List<oop_node_data> tempPath=shortestPath(src, dest);
+				List<node_data> tempPath=shortestPath(src, dest);
 				if(tempPath==null) return null;
 				boolean flag_first=true;
-				for (oop_node_data n : tempPath) {
+				for (node_data n : tempPath) {
 					if(flag_first) flag_first=false;
 					else path.add(n);
 				}
@@ -255,7 +253,7 @@ public class Graph_Algo implements graph_algorithms{
 	 * @return the new copied graph.
 	 */
 	@Override
-	public oop_graph copy() {
+	public graph copy() {
 		String file_name = "fileForCopy.txt";
 		this.save(file_name);
 		Graph_Algo ga=new Graph_Algo();
@@ -268,32 +266,32 @@ public class Graph_Algo implements graph_algorithms{
 	 * Graph getter.
 	 * @return the graph in this class.
 	 */
-	public oop_graph getG() {
+	public graph getG() {
 		return g;
 	}
 
 	/*****************Private Methods********************/
 	/**
 	 * Runs DFS algorithm on the given graph.
-	 * @param g represents the graph to be traveled.
+	 * @param g2 represents the graph to be traveled.
 	 * @return true- if all nodes are connected , otherwise false.
 	 */
-	private boolean runDFS(oop_graph g) {
+	private boolean runDFS(graph g2) {
 		boolean flag_first=true;
 		//Marks all the nodes as not visited 
-		for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext();) {
+		for(Iterator<node_data> it=g2.getV().iterator();it.hasNext();) {
 			it.next().setTag(0);
 		}
 		//Do DFS traversal starting from first node. 
-		for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext()&&flag_first;) {
-			oop_node_data v=it.next();
+		for(Iterator<node_data> it=g2.getV().iterator();it.hasNext()&&flag_first;) {
+			node_data v=it.next();
 			flag_first=false;
-			DFSUtil(v.getKey(),g);
+			DFSUtil(v.getKey(),g2);
 		}
 		// If DFS traversal doesn't visit all nodes, then return false.
-		for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext();) {
-			oop_node_data v=it.next();
-			if(g.getNode(v.getKey()).getTag()==0)
+		for(Iterator<node_data> it=g2.getV().iterator();it.hasNext();) {
+			node_data v=it.next();
+			if(g2.getNode(v.getKey()).getTag()==0)
 				return false;
 		}
 		return true;
@@ -303,42 +301,42 @@ public class Graph_Algo implements graph_algorithms{
 	 * Runs DFS starting from the first node.
 	 * @param key represents the first node.
 	 */
-	private void DFSUtil(int key,oop_graph g) 
+	private void DFSUtil(int key,graph g2) 
 	{ 
 
 		// Mark the current node as visited
-		g.getNode(key).setTag(1); 
+		g2.getNode(key).setTag(1); 
 
-		if(g.getE(key)==null)return;//there are no edges
+		if(g2.getE(key)==null)return;//there are no edges
 		// Recur for all the nodes adjacent to this node
-		for(Iterator<oop_edge_data> edgeIt=g.getE(key).iterator();edgeIt.hasNext();)
+		for(Iterator<edge_data> edgeIt=g2.getE(key).iterator();edgeIt.hasNext();)
 		{
-			oop_edge_data e=edgeIt.next();
-			oop_node_data e_dest=g.getNode(e.getDest());
+			edge_data e=edgeIt.next();
+			node_data e_dest=g2.getNode(e.getDest());
 			if(e_dest.getTag()==0)
-				DFSUtil(e_dest.getKey(),g);	
+				DFSUtil(e_dest.getKey(),g2);	
 		}
 	}
 	/**
 	 * Transposes the original graph.
 	 * @return transpose of this graph 
 	 */
-	private oop_graph getTranspose(oop_graph g) 
+	private graph getTranspose(graph g2) 
 	{ 
-		OOP_DGraph tran_g = new OOP_DGraph(); 
+		DGraph tran_g = new DGraph(); 
 
 		//Add all the nodes.
-		for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext();) {
-			oop_node_data v=it.next();
+		for(Iterator<node_data> it=g2.getV().iterator();it.hasNext();) {
+			node_data v=it.next();
 			tran_g.addNode(v);
 		}
 		//Add all the edges (but in opposite direction).
-		for(Iterator<oop_node_data> it=g.getV().iterator();it.hasNext();) {
-			oop_node_data v=it.next();
-			if(g.getE(v.getKey())!=null)
-				for(Iterator<oop_edge_data> edgeIt=g.getE(v.getKey()).iterator();edgeIt.hasNext();) {
-					oop_edge_data e=edgeIt.next();
-					oop_node_data e_dest=g.getNode(e.getDest());
+		for(Iterator<node_data> it=g2.getV().iterator();it.hasNext();) {
+			node_data v=it.next();
+			if(g2.getE(v.getKey())!=null)
+				for(Iterator<edge_data> edgeIt=g2.getE(v.getKey()).iterator();edgeIt.hasNext();) {
+					edge_data e=edgeIt.next();
+					node_data e_dest=g2.getNode(e.getDest());
 					tran_g.connect(e_dest.getKey(), v.getKey(), e.getWeight());
 				}
 		}
@@ -349,12 +347,12 @@ public class Graph_Algo implements graph_algorithms{
 	 * @param q represents the queue with the unvisited nodes.
 	 * @return the node with the minimum weight
 	 */
-	private int findMinNode(Queue<oop_node_data> q) {
+	private int findMinNode(Queue<node_data> q) {
 		double weight=Double.POSITIVE_INFINITY;
 		int minNode=0;
-		oop_node_data temp=null;
-		for (Iterator<oop_node_data> it = q.iterator(); it.hasNext();) {
-			oop_node_data node=it.next();
+		node_data temp=null;
+		for (Iterator<node_data> it = q.iterator(); it.hasNext();) {
+			node_data node=it.next();
 			if(node.getWeight()<weight)
 			{
 				weight=node.getWeight();
@@ -416,12 +414,12 @@ public class Graph_Algo implements graph_algorithms{
 		Graph_Algo ga=new Graph_Algo();
 		ga.init(g);
 		List<Integer>keys=new ArrayList<Integer>();
-		for (Iterator<oop_node_data> itNode = g.getV().iterator(); itNode.hasNext();) 
+		for (Iterator<node_data> itNode = g.getV().iterator(); itNode.hasNext();) 
 			keys.add(itNode.next().getKey());
 		boolean src=false,first=true;
 		int srcID=0;
 		//Checks if the src node is in the node targets list.
-		for(Iterator<oop_node_data> it=ga.getG().getV().iterator();it.hasNext()&&first;) {
+		for(Iterator<node_data> it=ga.getG().getV().iterator();it.hasNext()&&first;) {
 			int key=it.next().getKey();
 			if(targets.contains(key)) {
 				src=true;
@@ -453,7 +451,7 @@ public class Graph_Algo implements graph_algorithms{
 	 * Checks if the graph is connected (except a path to the source node)
 	 * @return the graph after visiting the nodes.
 	 */
-	private oop_graph isConnect() {
+	private graph isConnect() {
 		if(g.getV()==null)return null;//there are no nodes
 		boolean result=runDFS(g);
 		if(!result) return null;//DFS traversal doesn't visit all nodes.
@@ -463,10 +461,11 @@ public class Graph_Algo implements graph_algorithms{
 	 * Checks if there a path to the source node from the other nodes.
 	 * @return  the graph after visiting the nodes.
 	 */
-	private oop_graph isSrcConnect() {
-		oop_graph tran_g=getTranspose(g);//Create a reversed graph 
+	private graph isSrcConnect() {
+		graph tran_g=getTranspose(g);//Create a reversed graph 
 		runDFS(tran_g);//Do DFS for reversed graph starting from the same node as before.
 		return g;
 	}
+
 
 }

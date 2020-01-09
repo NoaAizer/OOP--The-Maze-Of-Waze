@@ -14,21 +14,20 @@ package algorithms;
 
 import java.util.List;
 
+import dataStructure.*;
 
-import oop_dataStructure.oop_graph;
-import oop_dataStructure.oop_node_data;
 
 public interface graph_algorithms {
 	/**
 	 * Init this set of algorithms on the parameter - graph.
 	 * @param g
 	 */
-	public void init(oop_graph g);
+	public void init(graph g);
 	/** 
 	 * Compute a deep copy of this graph.
 	 * @return
 	 */
-	public oop_graph copy();
+	public graph copy();
 	/**
 	 * Init a graph from file
 	 * @param file_name
@@ -60,7 +59,7 @@ public interface graph_algorithms {
 	 * @param dest - end (target) node
 	 * @return
 	 */
-	public List<oop_node_data> shortestPath(int src, int dest);
+	public List<node_data> shortestPath(int src, int dest);
 	/**
 	 * computes a relatively short path which visit each node in the targets List.
 	 * Note: this is NOT the classical traveling salesman problem, 
@@ -69,5 +68,5 @@ public interface graph_algorithms {
 	 * @param targets
 	 * @return
 	 */
-	public List<oop_node_data> TSP(List<Integer> targets);
+	public List<node_data> TSP(List<Integer> targets);
 }

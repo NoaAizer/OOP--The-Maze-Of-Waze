@@ -5,6 +5,8 @@ import oop_dataStructure.OOP_DGraph;
 import oop_dataStructure.oop_graph;
 import oop_dataStructure.oop_node_data;
 import algorithms.Graph_Algo;
+import dataStructure.DGraph;
+import dataStructure.node_data;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -728,7 +730,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		frame.requestFocusInWindow();
 		frame.setVisible(true);
 	}
-	public static void initGraph (oop_graph g){
+	public static void initGraph (DGraph g){
 		StdDraw.graph.init(g);
 	}
 	// create the menu bar (changed to private)
@@ -1643,11 +1645,11 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 *  Save drawing to a file.
 	 ***************************************************************************/
 	public static void load(String json_file) {
-		OOP_DGraph gr = new OOP_DGraph();
+		DGraph gr = new DGraph();
 		gr.init(json_file);
 		//System.out.println("******************* "+gr);
 		graph.init(gr);
-		gui.init(graph.getG());
+		gui.init((DGraph) graph.getG());
 
 		//		System.out.println(filename);
 		//		if (filename == null) throw new IllegalArgumentException();
@@ -1748,10 +1750,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 		}
 		if (str.equals("shortestPathDist")) {
-			Collection<oop_node_data> arr_n= graph.getG().getV();
+			Collection<node_data> arr_n= graph.getG().getV();
 			Integer[] options= new Integer [arr_n.size()];
 			int i=0;
-			for (oop_node_data n : arr_n) {
+			for (node_data n : arr_n) {
 				options[i]= n.getKey();
 				i++;
 			}
@@ -1775,10 +1777,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			}
 		}
 		if (str.equals("shortestPath")) {
-			Collection<oop_node_data> arr_n= graph.getG().getV();
+			Collection<node_data> arr_n= graph.getG().getV();
 			Integer[] options= new Integer [arr_n.size()];
 			int i=0;
-			for (oop_node_data n : arr_n) {
+			for (node_data n : arr_n) {
 				options[i]= n.getKey();
 				i++;
 			}
@@ -1788,12 +1790,12 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
 						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
 
-				List<oop_node_data> ans=graph.shortestPath(src, dest);
+				List<node_data> ans=graph.shortestPath(src, dest);
 
 				if(ans != null)
 				{
 					String ans_keys="";
-					for (oop_node_data n : ans) {
+					for (node_data n : ans) {
 						if(!n.equals(ans.get(ans.size()-1)))
 							ans_keys+=n.getKey()+"->";
 						else
@@ -1814,7 +1816,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 			if(keys.size() <= 1) {
 				JOptionPane.showMessageDialog(null, "Please pick at least 2 nodes on the frame\n and then press TSP again! ","Error", JOptionPane.ERROR_MESSAGE);
-				gui.init(graph.getG());
+				gui.init((DGraph) graph.getG());
 				gui.update();
 			}
 			else {
@@ -1822,12 +1824,12 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				JOptionPane.showMessageDialog(null,"The node you have selected:\n "+keys,"TSP", JOptionPane.INFORMATION_MESSAGE);
 				List<Integer> targets = new ArrayList<Integer>();
 				targets.addAll(keys);
-				List<oop_node_data> ans = graph.TSP(targets);
+				List<node_data> ans = graph.TSP(targets);
 
 				if(ans != null)
 				{
 					String ans_keys="";
-					for (oop_node_data n : ans) {
+					for (node_data n : ans) {
 						if(!n.equals(ans.get(ans.size()-1)))
 							ans_keys+=n.getKey()+"->";
 						else
@@ -1839,7 +1841,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				{
 					JOptionPane.showMessageDialog(null,"Error: There is no path between all those points :", "TSP result", JOptionPane.INFORMATION_MESSAGE);	
 				}
-				gui.init(graph.getG());
+				gui.init((DGraph) graph.getG());
 				gui.update();
 				StdDraw.show();
 				keys.clear();
@@ -1849,8 +1851,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 	private int isANode(double x,double y) {
-		for(Iterator<oop_node_data> verIter=graph.getG().getV().iterator();verIter.hasNext();) {
-			oop_node_data nd=verIter.next();
+		for(Iterator<node_data> verIter=graph.getG().getV().iterator();verIter.hasNext();) {
+			node_data nd=verIter.next();
 			if(Math.abs(x-nd.getLocation().x())<= StdDraw.EPSILON
 					&&Math.abs(y-nd.getLocation().y())<= StdDraw.EPSILON)
 				return nd.getKey();
@@ -1920,7 +1922,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			StdDraw.setPenColor(Color.GREEN);
 			StdDraw.setPenRadius(0.015);
 			StdDraw.point(graph.getG().getNode(key).getLocation().x(), graph.getG().getNode(key).getLocation().y());
-			gui.init(graph.getG());
+			gui.init((DGraph) graph.getG());
 		}
 	}
 

@@ -8,16 +8,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
 
-import oop_dataStructure.OOP_DGraph;
-import oop_dataStructure.oop_edge_data;
-import oop_dataStructure.oop_graph;
-import oop_dataStructure.oop_node_data;
-import oop_utils.OOP_Point3D;
+import dataStructure.*;
 import utils.*;
 
 public class MyGameGUI implements Runnable {
 	private static DecimalFormat df1 = new DecimalFormat("#.#");
-	oop_graph g;
+	DGraph g;
 	int mc;
 
 	/**
@@ -25,14 +21,14 @@ public class MyGameGUI implements Runnable {
 	 * @param _g represents the graph for the drawing.
 	 */
 	public MyGameGUI() {
-		oop_graph gr= new OOP_DGraph();
+		DGraph gr= new DGraph();
 		this.init(gr);
 
 	}
-	public MyGameGUI(OOP_DGraph gg) {
+	public MyGameGUI(DGraph gg) {
 		this.init(gg);
 	}
-	public void init (oop_graph g) {
+	public void init (DGraph g) {
 		this.g=g;
 		this.mc=g.getMC();
 		Thread t1=new Thread(this);
@@ -53,7 +49,6 @@ public class MyGameGUI implements Runnable {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -79,11 +74,11 @@ public class MyGameGUI implements Runnable {
 	 */
 	public void drawGraph() {
 		initSize();
-		for (oop_node_data n : g.getV() ){
+		for (node_data n : g.getV() ){
 			drawNode(this.g,n);
 			if (g.getE(n.getKey()) != null) {
-				for(Iterator<oop_edge_data> edgeIt=g.getE(n.getKey()).iterator();edgeIt.hasNext();) {
-					oop_edge_data e=edgeIt.next();
+				for(Iterator<edge_data> edgeIt=g.getE(n.getKey()).iterator();edgeIt.hasNext();) {
+					edge_data e=edgeIt.next();
 					drawEdge(this.g,e);
 				}
 			}
@@ -100,13 +95,13 @@ public class MyGameGUI implements Runnable {
 	}
 	/**
 	 * Draws a given node on the frame.
-	 * @param g represents the given graph.
+	 * @param g2 represents the given graph.
 	 * @param n represents the node for drawing.
 	 */
-	public static void drawNode(oop_graph g,oop_node_data n) {
+	public static void drawNode(DGraph g2,node_data n) {
 		StdDraw.setFont(new Font("Calibri", Font.CENTER_BASELINE, 16));
-		Range ry= rangeY(g.getV());
-		OOP_Point3D src=n.getLocation();
+		Range ry= rangeY(g2.getV());
+		Point3D src=n.getLocation();
 		StdDraw.setPenRadius(0.01);
 		StdDraw.setPenColor(Color.BLUE);
 		StdDraw.point(src.x(), src.y());
@@ -118,11 +113,11 @@ public class MyGameGUI implements Runnable {
 	 * @param g2 represents the given graph.
 	 * @param e represents the edge for drawing.
 	 */
-	public static void drawEdge(oop_graph g2,oop_edge_data e) {
-		oop_node_data src=g2.getNode(e.getSrc());
-		oop_node_data dest=g2.getNode(e.getDest());
-		OOP_Point3D s= src.getLocation();
-		OOP_Point3D d=dest.getLocation();
+	public static void drawEdge(DGraph g2,edge_data e) {
+		node_data src=g2.getNode(e.getSrc());
+		node_data dest=g2.getNode(e.getDest());
+		Point3D s= src.getLocation();
+		Point3D d=dest.getLocation();
 		StdDraw.setPenColor(Color.GRAY);
 		StdDraw.setPenRadius();
 		StdDraw.line(s.x(), s.y(), d.x(), d.y());
@@ -144,9 +139,9 @@ public class MyGameGUI implements Runnable {
 	 * @param collection represents a list with all the nodes in the graph.
 	 * @return the x range.
 	 */
-	public static Range rangeX (Collection<oop_node_data> collection) {
+	public static Range rangeX (Collection<node_data> collection) {
 		double min= Double.POSITIVE_INFINITY , max=Double.NEGATIVE_INFINITY;
-		for (oop_node_data n: collection) {
+		for (node_data n: collection) {
 			if(n.getLocation().x()<min) min=n.getLocation().x();
 			if(n.getLocation().x()>max) max=n.getLocation().x();
 		}
@@ -157,27 +152,27 @@ public class MyGameGUI implements Runnable {
 	 * @param collection represents a list with all the nodes in the graph.
 	 * @return the y range.
 	 */
-	public static Range rangeY (Collection<oop_node_data> collection) {
+	public static Range rangeY (Collection<node_data> collection) {
 		double min= Double.POSITIVE_INFINITY , max=Double.NEGATIVE_INFINITY;
-		for (oop_node_data n: collection)  {
+		for (node_data n: collection)  {
 			if(n.getLocation().y()<min) min=n.getLocation().y();
 			if(n.getLocation().y()>max) max=n.getLocation().y();
 		}
 		return new Range (min,max);
 	}
-	public static void drawRobot(oop_graph g,oop_node_data n) {
+	public static void drawRobot(DGraph g,node_data n) {
 		Random random = new Random();
 		final float hue = random.nextFloat();
 		// Saturation between 0.1 and 0.3
 		final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
 		final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
 		Color color = Color.getHSBColor(hue, saturation, luminance);
-		OOP_Point3D src=n.getLocation();
+		Point3D src=n.getLocation();
 		StdDraw.setPenRadius(0.03);
 		StdDraw.setPenColor(color);
 		StdDraw.point(src.x(), src.y());
 	}
-	public static void drawFruit(oop_graph g,Fruit f) {
+	public static void drawFruit(DGraph gg,Fruit f) {
 		if(f.getType()==1)
 			StdDraw.picture(f.getPos().x(), f.getPos().y(), "data/apple.png",0.0007,0.0004);
 		else if(f.getType()==-1)
@@ -185,7 +180,7 @@ public class MyGameGUI implements Runnable {
 	}
 	public static void main(String[] args) {
 
-		OOP_DGraph g= new OOP_DGraph();
+		DGraph g= new DGraph();
 		//		OOP_Point3D p1,p2,p3,p4,p5,p6,p7;
 		//		node_data n1,n2,n3,n4,n5,n6,n7;
 
