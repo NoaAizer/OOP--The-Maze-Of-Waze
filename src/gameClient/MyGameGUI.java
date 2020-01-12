@@ -8,7 +8,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+
+import Server.game_service;
 import dataStructure.*;
+import elements.Fruit;
+import elements.Game;
+import elements.Robot;
 import utils.*;
 
 public class MyGameGUI implements Runnable {
@@ -22,13 +32,13 @@ public class MyGameGUI implements Runnable {
 	 */
 	public MyGameGUI() {
 		DGraph gr= new DGraph();
-		this.init(gr);
-
+		this.g=gr;
 	}
 	public MyGameGUI(DGraph gg) {
 		this.init(gg);
 	}
 	public void init (DGraph g) {
+		StdDraw.enableDoubleBuffering();
 		this.g=g;
 		this.mc=g.getMC();
 		Thread t1=new Thread(this);
@@ -36,6 +46,15 @@ public class MyGameGUI implements Runnable {
 		StdDraw.initGraph(g);
 
 
+	}
+	public int pickScenario(int num) {
+		Integer[] options= new Integer [num];
+		for (int i = 0; i < options.length; i++) {
+			options[i]=i+1;	
+		}
+		int scenario_num = (Integer)JOptionPane.showInputDialog(null, "Pick a level to play:", 
+				"Pick a level:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+		return scenario_num-1;
 	}
 	@Override
 	public void run() {
@@ -83,6 +102,7 @@ public class MyGameGUI implements Runnable {
 				}
 			}
 		}
+		StdDraw.show();
 	}
 
 	/**
@@ -160,23 +180,91 @@ public class MyGameGUI implements Runnable {
 		}
 		return new Range (min,max);
 	}
-	public static void drawRobot(DGraph g,node_data n) {
-		Random random = new Random();
-		final float hue = random.nextFloat();
-		// Saturation between 0.1 and 0.3
-		final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
-		final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
-		Color color = Color.getHSBColor(hue, saturation, luminance);
-		Point3D src=n.getLocation();
-		StdDraw.setPenRadius(0.03);
-		StdDraw.setPenColor(color);
-		StdDraw.point(src.x(), src.y());
+	public void drawRobots(game_service game) {
+		Game gameObj=createGame(game.toString());
+		int numOfRobots=gameObj.getRobots();
+		System.out.println("num of robots "+numOfRobots);
+		int numOfNodes=g.nodeSize();
+		Integer[] options= new Integer [numOfNodes];
+		int counter=0;
+		for(node_data nd: g.getV()) {
+			options[counter]=nd.getKey();	
+			counter++;
+		}
+		for(int i=1;i<=numOfRobots;i++) {
+			int nodeKey = (Integer)JOptionPane.showInputDialog(null, "Pick a node to place the robot:", 
+					"Add Robot:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+			game.addRobot(nodeKey);
+			node_data n= g.getNode(nodeKey);
+			Random random = new Random();
+			final float hue = random.nextFloat();
+			// Saturation between 0.1 and 0.3
+			final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
+			final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
+			Color color = Color.getHSBColor(hue, saturation, luminance);
+			Point3D src=n.getLocation();
+			StdDraw.setPenRadius(0.03);
+			StdDraw.setPenColor(color);
+			StdDraw.point(src.x(), src.y());
+		}
+		for(String robotStr: game.getRobots()) {
+			createRobot(robotStr);
+		}
+		StdDraw.show();
 	}
-	public static void drawFruit(DGraph gg,Fruit f) {
-		if(f.getType()==1)
-			StdDraw.picture(f.getPos().x(), f.getPos().y(), "data/apple.png",0.0007,0.0004);
-		else if(f.getType()==-1)
-			StdDraw.picture(f.getPos().x(), f.getPos().y(), "data/banana.png",0.0007,0.0004);
+
+	private Robot createRobot(String robotStr) {
+		Gson gson = new Gson();
+		try
+		{
+			Robot r=gson.fromJson(robotStr, Robot.class);
+			return r;
+		} 
+		catch ( JsonSyntaxException  e) //default value for unreadable file
+		{
+			throw new RuntimeException("wrong format for robot");
+		}
+
+	}
+	public void drawFruits(game_service game) {
+		for(String fruitStr:game.getFruits()) {
+			fruitStr=fruitStr.substring(9,fruitStr.length()-1);
+			Fruit f= createFruit(fruitStr);
+			if(f.getType()==1)
+				StdDraw.picture(f.getPos().x(), f.getPos().y(), "data/apple.png",0.0007,0.0004);
+			else if(f.getType()==-1)
+				StdDraw.picture(f.getPos().x(), f.getPos().y(), "data/banana.png",0.0007,0.0004);
+		}
+		StdDraw.show();
+		
+	}
+
+	private Fruit createFruit(String fruitStr) {
+		Gson gson = new Gson();
+		try
+		{
+			Fruit f=gson.fromJson(fruitStr, Fruit.class);
+			return f;
+		} 
+		catch ( JsonSyntaxException  e) //default value for unreadable file
+		{
+			throw new RuntimeException("wrong format for fruit");
+		}
+
+	}
+	private  Game createGame(String gameStr) 
+	{	
+		gameStr=gameStr.substring(14,gameStr.length()-1);
+		Gson gson = new Gson();
+		try
+		{
+			Game gameObj=gson.fromJson(gameStr, Game.class);
+			return gameObj;
+		} 
+		catch ( JsonSyntaxException  e) //default value for unreadable file
+		{
+			throw new RuntimeException("wrong format for Game");
+		}
 	}
 	public static void main(String[] args) {
 

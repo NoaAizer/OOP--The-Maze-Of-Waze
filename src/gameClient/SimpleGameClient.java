@@ -9,6 +9,9 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import Server.Game_Server;
 import Server.game_service;
 import dataStructure.*;
@@ -34,29 +37,21 @@ public class SimpleGameClient {
 	public static void main(String[] a) {
 		test1();}
 	public static void test1() {
-		Integer[] options= new Integer [24];
-		for (int i = 0; i < options.length; i++) {
-			options[i]=i;	
-		}
-		int scenario_num = (Integer)JOptionPane.showInputDialog(null, "Pick a level to play:", 
-				"Pick a level:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-		game_service game = Game_Server.getServer(scenario_num); // you have [0,23] games
+		MyGameGUI mg= new MyGameGUI();
+		int numOfLevels=24;
+		int numSc=mg.pickScenario(numOfLevels);
+		game_service game = Game_Server.getServer(numSc); // you have [0,23] games
 		String g = game.getGraph();
 		DGraph gg = new DGraph();
 		gg.init(g);
-		MyGameGUI mg= new MyGameGUI(gg);
+		System.out.println(game);
+		mg.init(gg);
 		mg.drawGraph();
 		String info = game.toString();
 		System.out.println(info);
-		int numOfRobots=Integer.valueOf(info.substring(info.indexOf("robots")+8, info.indexOf(","+'"'+"graph")));
-		for(int i=1;i<=numOfRobots;i++) {
-			game.addRobot(i);
-			MyGameGUI.drawRobot(gg, gg.getNode(i));
-		}
-		for(String fruitStr:game.getFruits()) {
-			Fruit f= new Fruit(fruitStr);
-			MyGameGUI.drawFruit(gg, f);
-		}
+		mg.drawRobots(game);
+		System.out.println("DRAW");
+		mg.drawFruits(game);
 		JSONObject line;
 		try {
 			line = new JSONObject(info);

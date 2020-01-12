@@ -1,9 +1,7 @@
 package utils;
 
 import gameClient.MyGameGUI;
-import oop_dataStructure.OOP_DGraph;
-import oop_dataStructure.oop_graph;
-import oop_dataStructure.oop_node_data;
+
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 import dataStructure.node_data;
@@ -38,8 +36,6 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
 import java.net.MalformedURLException;
@@ -1647,7 +1643,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public static void load(String json_file) {
 		DGraph gr = new DGraph();
 		gr.init(json_file);
-		//System.out.println("******************* "+gr);
 		graph.init(gr);
 		gui.init((DGraph) graph.getG());
 
