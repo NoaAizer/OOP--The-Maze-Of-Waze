@@ -41,8 +41,7 @@ public class Robot {
 	}
 	public Point3D getPos() 
 	{
-		Point3D p=new Point3D(pos);
-		return p;
+		return new Point3D(pos);
 	}
 
 	public void setSrc(int src) 
@@ -56,6 +55,11 @@ public class Robot {
 	public void setPos(Point3D p) 
 	{
 		this.pos=""+p.x()+","+p.y()+","+p.z();
+
+	}
+	public String toString() 
+	{
+		return "id " +id+ " value "+value+" speed "+speed +" pos "+pos;
 
 	}
 }

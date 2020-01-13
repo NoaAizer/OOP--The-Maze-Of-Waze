@@ -1,10 +1,12 @@
 package utils;
 
+import gameClient.Game_Algo;
 import gameClient.MyGameGUI;
 
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 import dataStructure.node_data;
+import elements.Robot;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -492,7 +494,7 @@ import javax.swing.KeyStroke;
  */
 public final class StdDraw implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
 	public static Graph_Algo graph=new Graph_Algo();
-	public static MyGameGUI gui= new MyGameGUI();
+	public static MyGameGUI gui;
 
 	/**
 	 *  The color black.
@@ -1644,7 +1646,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		DGraph gr = new DGraph();
 		gr.init(json_file);
 		graph.init(gr);
-		gui.init((DGraph) graph.getG());
+		gui.init(graph.getG());
 
 		//		System.out.println(filename);
 		//		if (filename == null) throw new IllegalArgumentException();
@@ -1854,6 +1856,20 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		}
 		return -1;
 	}
+	private boolean isARobot(double x,double y) {
+		List<String>robListStr=gui.game.getRobots();
+		List<Robot>robList=new ArrayList<Robot>();
+		for (String r : robListStr) {
+			robList.add(Game_Algo.createRobot(r));
+		}
+		for(Iterator<Robot> robIter=robList.iterator();robIter.hasNext();) {
+			Robot r=robIter.next();
+			if(Math.abs(x-r.getPos().x())<= StdDraw.EPSILON
+					&&Math.abs(y-r.getPos().y())<= StdDraw.EPSILON)
+				return true;
+		}
+		return false;
+	}
 
 	/***************************************************************************
 	 *  Mouse interactions.
@@ -1912,6 +1928,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int key = isANode((StdDraw.userX(e.getX())),StdDraw.userY(e.getY()));
+		boolean rob=isARobot((StdDraw.userX(e.getX())),StdDraw.userY(e.getY()));
 		if(key != -1) {
 			keys.add(key);
 			StdDraw.setPenColor(Color.GREEN);
