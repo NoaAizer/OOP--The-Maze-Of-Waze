@@ -28,6 +28,8 @@ public class Game_Algo {
 
 	public static final double EPS1=0.000001;
 	public static Graph_Algo algo;
+	public static graph g;
+	public static game_service game;
 
 	public static boolean isOnEdge(Point3D p, Point3D src , Point3D dest) {
 		boolean ans=false;
@@ -168,6 +170,7 @@ public class Game_Algo {
 			throw new RuntimeException("wrong format for Game");
 		}
 	}
+	
 	public static void moveRobotsAuto(game_service game , DGraph g, List<Fruit>fruits) {
 		algo= new Graph_Algo(g);
 		List<String> log = game.move();

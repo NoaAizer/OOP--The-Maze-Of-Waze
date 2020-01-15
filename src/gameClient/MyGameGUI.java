@@ -28,7 +28,7 @@ public class MyGameGUI implements Runnable {
 	private double maxX=Double.NEGATIVE_INFINITY;
 	private double maxY=Double.NEGATIVE_INFINITY;
 	private int mode;
-
+	public static KML_Logger kml;
 
 	/**
 	 * Add a graph to draw
@@ -42,9 +42,9 @@ public class MyGameGUI implements Runnable {
 		drawFruits();
 		StdDraw.show();
 		if(mode==1)
-		Game_Algo.autoRobotLocation(g,fruits);
+			Game_Algo.autoRobotLocation(g,fruits);
 		else
-		PickARobotPlace();
+			PickARobotPlace();
 		robots=Game_Algo.createRobotsList(getGame());
 		drawRobots();
 		StdDraw.show();
@@ -81,6 +81,8 @@ public class MyGameGUI implements Runnable {
 				null, options, options[0]);
 		return ans;
 	}
+
+	
 	/**
 	 * Initialize the size of the frame according to the x,y ranges.
 	 */
@@ -267,6 +269,8 @@ public class MyGameGUI implements Runnable {
 	public void run() 
 	{
 		getGame().startGame();
+		kml = new KML_Logger(scenario_num);
+		
 		int index=0;
 		while(getGame().isRunning())
 		{
@@ -287,8 +291,11 @@ public class MyGameGUI implements Runnable {
 			}
 		}
 		int result=Game_Algo.createGame(getGame().toString()).getGrade();
+		kml.kmlEnd();
 		JOptionPane.showMessageDialog(null, "Game Over! \nYour grade: "+result,"Finish", JOptionPane.CLOSED_OPTION);
 	}
+	
+	
 	public static void main(String[] args) {
 	}
 
