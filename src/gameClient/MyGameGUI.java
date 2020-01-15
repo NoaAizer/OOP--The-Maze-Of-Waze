@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -17,15 +16,18 @@ import utils.*;
 
 public class MyGameGUI implements Runnable {
 	//private static DecimalFormat df1 = new DecimalFormat("#.#");
-	public game_service game;
+	//	private static Color colorR = Color.BLUE;
+	private static game_service game;
 	private int scenario_num;
-	private DGraph g;
+	public DGraph g;
 	private List<Fruit> fruits;
 	private List<Robot> robots;
+	public List<Integer> robotsColor;
 	private double minX=Double.POSITIVE_INFINITY;
 	private double minY=Double.POSITIVE_INFINITY;
 	private double maxX=Double.NEGATIVE_INFINITY;
 	private double maxY=Double.NEGATIVE_INFINITY;
+	private int mode;
 
 
 	/**
@@ -33,15 +35,17 @@ public class MyGameGUI implements Runnable {
 	 * @param _g represents the graph for the drawing.
 	 */
 	public MyGameGUI() {
-		StdDraw.enableDoubleBuffering();
 		init();
+		StdDraw.enableDoubleBuffering();
 		drawGraph();
-		fruits=Game_Algo.createFruitsList(game);
+		fruits=Game_Algo.createFruitsList(getGame());
 		drawFruits();
 		StdDraw.show();
+		if(mode==1)
+		Game_Algo.autoRobotLocation(g,fruits);
+		else
 		PickARobotPlace();
-		robots=Game_Algo.createRobotsList(game);
-		System.out.println(robots.size());
+		robots=Game_Algo.createRobotsList(getGame());
 		drawRobots();
 		StdDraw.show();
 		Thread t=new Thread(this);
@@ -49,9 +53,10 @@ public class MyGameGUI implements Runnable {
 	}
 	private void init() {
 		this.scenario_num=pickScenario(24);
-		game=Game_Server.getServer(scenario_num);
+		setGame(Game_Server.getServer(scenario_num));
+		this.mode=pickMode();//0=manual , 1=auto
 		g=new DGraph();
-		g.init(game.getGraph());
+		g.init(getGame().getGraph());
 		StdDraw.initGraph(g);
 		initSize();
 
@@ -63,17 +68,24 @@ public class MyGameGUI implements Runnable {
 	public static int pickScenario(int num) {
 		Integer[] options= new Integer [num];
 		for (int i = 0; i < options.length; i++) {
-			options[i]=i+1;	
+			options[i]=i;	
 		}
 		int scenario_num = (Integer)JOptionPane.showInputDialog(null, "Pick a level to play:", 
 				"Pick a level:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-		return scenario_num-1;
+		return scenario_num;
+	}
+	public static int pickMode() {
+		String[] options = new String[] {"Manual", "Auto"};
+		int ans = JOptionPane.showOptionDialog(null, "Pick a mode to play:", "Game Mode",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, options[0]);
+		return ans;
 	}
 	/**
 	 * Initialize the size of the frame according to the x,y ranges.
 	 */
 	private void initSize() {
-		StdDraw.setCanvasSize(1000,800);
+		StdDraw.setCanvasSize(800,500);
 		rangeX(this.g.getV());
 		rangeY(this.g.getV());
 		double limx=(maxX-minX)*0.2;
@@ -81,12 +93,12 @@ public class MyGameGUI implements Runnable {
 		StdDraw.setXscale(minX-limx, maxX+limx);
 		StdDraw.setYscale(minY-limy, maxY+limy);
 	}
-	public void draw()
+	public void repaint()
 	{
-		this.update();
-		fruits=Game_Algo.createFruitsList(game);
+		update();
+		fruits=Game_Algo.createFruitsList(getGame());
 		drawFruits();
-		robots=Game_Algo.createRobotsList(game);
+		robots=Game_Algo.createRobotsList(getGame());
 		drawRobots();
 		StdDraw.show();
 	}
@@ -106,10 +118,10 @@ public class MyGameGUI implements Runnable {
 		}
 		StdDraw.setPenColor(Color.BLACK);
 		StdDraw.setPenRadius(0.020);
-		StdDraw.text(minX,maxY+0.001, "TIME:"+game.timeToEnd()/1000);;
-		Game result=Game_Algo.createGame(game.toString());
-		StdDraw.text(minX+0.01,maxY+0.001, "LEVEL:"+scenario_num+1);
-		StdDraw.text(minX+0.02,maxY+0.001, "GRADE:"+result.getGrade());
+		StdDraw.text(minX,maxY+0.001, "TIME TO END: "+getGame().timeToEnd()/1000);;
+		Game result=Game_Algo.createGame(getGame().toString());
+		StdDraw.text(minX+0.01,maxY+0.001, "LEVEL: "+(scenario_num));
+		StdDraw.text(minX+0.02,maxY+0.001, "POINTS: "+result.getGrade());
 	}
 
 	/**
@@ -182,27 +194,28 @@ public class MyGameGUI implements Runnable {
 		}
 
 	}
+	//	private static void color() {
+	//					Random random = new Random();
+	//					final float hue = random.nextFloat();
+	//					// Saturation between 0.1 and 0.3
+	//					final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
+	//					final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
+	//					colorR = Color.getHSBColor(hue, saturation, luminance);	
+	//	}
 	public void drawRobots() {
 
 		for(int i=0;i<robots.size();i++)
 		{
 			Robot r=robots.get(i);
-			System.out.println(r);
-			Random random = new Random();
-			final float hue = random.nextFloat();
-			// Saturation between 0.1 and 0.3
-			final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
-			final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
-			Color color = Color.getHSBColor(hue, saturation, luminance);
 			Point3D src=r.getPos();
 			StdDraw.setPenRadius(0.03);
-			StdDraw.setPenColor(color);
+			StdDraw.setPenColor(Color.MAGENTA);
 			StdDraw.point(src.x(), src.y());
 		}
 	}
 	public void PickARobotPlace()
 	{
-		Game game=Game_Algo.createGame(this.game.toString());
+		Game game=Game_Algo.createGame(MyGameGUI.getGame().toString());
 		int numOfRobots=game.getRobots();
 		int numOfNodes=g.nodeSize();
 		Integer[] options= new Integer [numOfNodes];
@@ -214,23 +227,22 @@ public class MyGameGUI implements Runnable {
 		for(int i=1;i<=numOfRobots;i++) {
 			int nodeKey = (Integer)JOptionPane.showInputDialog(null, "Pick a node to place the robot:", 
 					"Add Robot:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-			this.game.addRobot(nodeKey);
-			Random random = new Random();
-			final float hue = random.nextFloat();
-			// Saturation between 0.1 and 0.3
-			final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
-			final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
-			Color color = Color.getHSBColor(hue, saturation, luminance);
-			node_data n= g.getNode(nodeKey);
-			Point3D src=n.getLocation();
-			StdDraw.setPenRadius(0.03);
-			StdDraw.setPenColor(color);
-			StdDraw.point(src.x(), src.y());
-
-
+			MyGameGUI.getGame().addRobot(nodeKey);
+			//			Random random = new Random();
+			//			final float hue = random.nextFloat();
+			//			// Saturation between 0.1 and 0.3
+			//			final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
+			//			final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
+			//			Color color = Color.getHSBColor(hue, saturation, luminance);
+			//			node_data n= g.getNode(nodeKey);
+			//			Point3D src=n.getLocation();
+			//			StdDraw.setPenRadius(0.03);
+			//			StdDraw.setPenColor(color.red);
+			//			StdDraw.point(src.x(), src.y());
 		}
-		for(String robotStr: this.game.getRobots()) {
+		for(String robotStr: MyGameGUI.getGame().getRobots()) {
 			Game_Algo.createRobot(robotStr);
+
 		}
 
 	}
@@ -246,28 +258,38 @@ public class MyGameGUI implements Runnable {
 		StdDraw.show();
 
 	}
+	public static game_service getGame() {
+		return game;
+	}
+	public static void setGame(game_service game) {
+		MyGameGUI.game = game;
+	}
 	public void run() 
 	{
-		game.startGame();
+		getGame().startGame();
 		int index=0;
-		while(game.isRunning())
+		while(getGame().isRunning())
 		{
-			Game_Algo.moveRobots(game,g);
+			if(mode==1)
+				Game_Algo.moveRobotsAuto(getGame(),g,fruits);
+			else
+				StdDraw.manMode=true;
 			try
 			{
 				Thread.sleep(100);
 				if(index%2==0)
-					draw();
+					repaint();
 				index++;
 			}
 			catch(InterruptedException e)
 			{
 				e.printStackTrace();
 			}
-		}		
-		int result=Game_Algo.createGame(game.toString()).getGrade();
+		}
+		int result=Game_Algo.createGame(getGame().toString()).getGrade();
 		JOptionPane.showMessageDialog(null, "Game Over! \nYour grade: "+result,"Finish", JOptionPane.CLOSED_OPTION);
 	}
 	public static void main(String[] args) {
 	}
+
 }

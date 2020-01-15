@@ -42,10 +42,8 @@ import java.io.IOException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -495,6 +493,7 @@ import javax.swing.KeyStroke;
 public final class StdDraw implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
 	public static Graph_Algo graph=new Graph_Algo();
 	public static MyGameGUI gui;
+	public static boolean isFirst=true;
 
 	/**
 	 *  The color black.
@@ -621,7 +620,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 	// default font
 	private static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 16);
-	private static final double EPSILON = 0.5;
+
 
 	// current font
 	private static Font font;
@@ -1809,67 +1808,47 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 			}
 		}
-		if(str.equals("TSP")) {
-
-			if(keys.size() <= 1) {
-				JOptionPane.showMessageDialog(null, "Please pick at least 2 nodes on the frame\n and then press TSP again! ","Error", JOptionPane.ERROR_MESSAGE);
-				gui.init((DGraph) graph.getG());
-				gui.update();
-			}
-			else {
-
-				JOptionPane.showMessageDialog(null,"The node you have selected:\n "+keys,"TSP", JOptionPane.INFORMATION_MESSAGE);
-				List<Integer> targets = new ArrayList<Integer>();
-				targets.addAll(keys);
-				List<node_data> ans = graph.TSP(targets);
-
-				if(ans != null)
-				{
-					String ans_keys="";
-					for (node_data n : ans) {
-						if(!n.equals(ans.get(ans.size()-1)))
-							ans_keys+=n.getKey()+"->";
-						else
-							ans_keys+=n.getKey();
-					}
-					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"TSP result", JOptionPane.INFORMATION_MESSAGE);
-				}
-				else 
-				{
-					JOptionPane.showMessageDialog(null,"Error: There is no path between all those points :", "TSP result", JOptionPane.INFORMATION_MESSAGE);	
-				}
-				gui.init((DGraph) graph.getG());
-				gui.update();
-				StdDraw.show();
-				keys.clear();
-			}
-		}
+		//		if(str.equals("TSP")) {
+		//
+		//			if(keys.size() <= 1) {
+		//				JOptionPane.showMessageDialog(null, "Please pick at least 2 nodes on the frame\n and then press TSP again! ","Error", JOptionPane.ERROR_MESSAGE);
+		//				gui.init((DGraph) graph.getG());
+		//				gui.update();
+		//			}
+		//			else {
+		//
+		//				JOptionPane.showMessageDialog(null,"The node you have selected:\n "+keys,"TSP", JOptionPane.INFORMATION_MESSAGE);
+		//				List<Integer> targets = new ArrayList<Integer>();
+		//				targets.addAll(keys);
+		//				List<node_data> ans = graph.TSP(targets);
+		//
+		//				if(ans != null)
+		//				{
+		//					String ans_keys="";
+		//					for (node_data n : ans) {
+		//						if(!n.equals(ans.get(ans.size()-1)))
+		//							ans_keys+=n.getKey()+"->";
+		//						else
+		//							ans_keys+=n.getKey();
+		//					}
+		//					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"TSP result", JOptionPane.INFORMATION_MESSAGE);
+		//				}
+		//				else 
+		//				{
+		//					JOptionPane.showMessageDialog(null,"Error: There is no path between all those points :", "TSP result", JOptionPane.INFORMATION_MESSAGE);	
+		//				}
+		//				gui.init((DGraph) graph.getG());
+		//				gui.update();
+		//				StdDraw.show();
+		//				keys.clear();
+		//			}
+		//		}
 
 	}
 
-	private int isANode(double x,double y) {
-		for(Iterator<node_data> verIter=graph.getG().getV().iterator();verIter.hasNext();) {
-			node_data nd=verIter.next();
-			if(Math.abs(x-nd.getLocation().x())<= StdDraw.EPSILON
-					&&Math.abs(y-nd.getLocation().y())<= StdDraw.EPSILON)
-				return nd.getKey();
-		}
-		return -1;
-	}
-	private boolean isARobot(double x,double y) {
-		List<String>robListStr=gui.game.getRobots();
-		List<Robot>robList=new ArrayList<Robot>();
-		for (String r : robListStr) {
-			robList.add(Game_Algo.createRobot(r));
-		}
-		for(Iterator<Robot> robIter=robList.iterator();robIter.hasNext();) {
-			Robot r=robIter.next();
-			if(Math.abs(x-r.getPos().x())<= StdDraw.EPSILON
-					&&Math.abs(y-r.getPos().y())<= StdDraw.EPSILON)
-				return true;
-		}
-		return false;
-	}
+
+
+
 
 	/***************************************************************************
 	 *  Mouse interactions.
@@ -1920,23 +1899,36 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			return mouseY;
 		}
 	}
+	private static MoveManual man;
 
-	LinkedHashSet<Integer> keys = new LinkedHashSet<Integer>();
+	public static int currKey=-1;
+	public static int currRobot=-1;
+
+	public static Robot r=null;
+	public static boolean manMode=false;
 	/**
 	 * This method cannot be called directly.
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int key = isANode((StdDraw.userX(e.getX())),StdDraw.userY(e.getY()));
-		boolean rob=isARobot((StdDraw.userX(e.getX())),StdDraw.userY(e.getY()));
-		if(key != -1) {
-			keys.add(key);
-			StdDraw.setPenColor(Color.GREEN);
-			StdDraw.setPenRadius(0.015);
-			StdDraw.point(graph.getG().getNode(key).getLocation().x(), graph.getG().getNode(key).getLocation().y());
-			gui.init((DGraph) graph.getG());
+		if(manMode) {
+			Point3D p = new Point3D (mouseX,mouseY);
+			currKey = Game_Algo.isANode((DGraph) graph.getG(),p.x(),p.y());
+			r = Game_Algo.isARobot(MyGameGUI.getGame(),(DGraph)graph.getG(),p.x(),p.y());
+			if(r!=null)currRobot=r.getId();
+			if (isFirst){
+				man=new MoveManual(currKey,currRobot);
+				Thread t= new Thread (man);
+				t.start();
+				isFirst=false;
+			}
+			else {
+				if(currKey!=-1) {man.setKey(currKey);}
+				if(currRobot!=-1) {man.setId(currRobot);}					
+			}
 		}
 	}
+
 
 
 	// this body is intentionally left empty

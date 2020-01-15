@@ -1,5 +1,7 @@
 package elements;
 
+
+
 import utils.Point3D;
 
 public class Robot {
@@ -59,7 +61,7 @@ public class Robot {
 	}
 	public String toString() 
 	{
-		return "id " +id+ " value "+value+" speed "+speed +" pos "+pos;
+		return "id: " +id+ " value: "+value+" speed: "+speed +" pos: "+pos+ " src: "+src+" dest: "+dest;
 
 	}
 }
