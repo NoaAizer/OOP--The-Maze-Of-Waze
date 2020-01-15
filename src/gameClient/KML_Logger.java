@@ -93,25 +93,15 @@ public class KML_Logger {
 						"</kml>"
 				);
 		try
-		{
-			File f=new File("data/"+this.stage+".kml");
-			PrintWriter pw=new PrintWriter(f);
+		{ /////sava file .kml
+			String fileName = "data/"+this.stage + ".kml";
+			PrintWriter pw = new PrintWriter(new File(fileName));
 			pw.write(info.toString());
 			pw.close();
+			
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void saveKML(String KML) {
-		try {
-			FileWriter f1 = new FileWriter("test1.kml");
-			f1.write(KML);
-			f1.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	}	
 }
