@@ -22,7 +22,7 @@ public class Game_Algo {
 
 	public static final double EPS1=0.000001;
 	public static Graph_Algo algo;
-	public static KML_Logger kml;
+	
 
 	/**
 	 * Creates a new arena from the json file of the service game;
@@ -81,12 +81,12 @@ public class Game_Algo {
 			String fruit=frItr.next();
 			fruit=fruit.substring(9,fruit.length()-1);
 			Fruit f=createFruit(fruit);
-			if (kml != null) {
+			if (MyGameGUI.kml != null) {
 				Date date = new Date();
 				if (f.getType() == -1) {
-					kml.addPlaceMark(date, "banana", f.getPos());
+					MyGameGUI.kml.addPlaceMark(date, "banana", f.getPos());
 				} else {
-					kml.addPlaceMark(date, "apple", f.getPos());
+					MyGameGUI.kml.addPlaceMark(date, "apple", f.getPos());
 				}
 			}
 			fruits.add(f);//add to the list of fruit
@@ -136,9 +136,9 @@ public class Game_Algo {
 		for(String robStr:rob)
 		{
 			Robot r = createRobot(robStr);
-			if (kml != null) {
+			if (MyGameGUI.kml != null) {
 				Date date = new Date();
-				kml.addPlaceMark(date, "robot", r.getPos());
+				MyGameGUI.kml.addPlaceMark(date, "robot", r.getPos());
 			}
 			robots.add(r);
 		}

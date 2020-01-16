@@ -2,25 +2,17 @@ package gameClient;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
 import java.util.Date;
 
-import Server.game_service;
-import dataStructure.edge_data;
-import dataStructure.graph;
-import dataStructure.node_data;
-import elements.Fruit;
-import elements.Robot;
+
 import utils.Point3D;
 
 
-public class KML_Logger {
+public class KML_Logger{
 
 	private int stage;
 	private StringBuilder info;
@@ -46,7 +38,7 @@ public class KML_Logger {
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
 						"    </Style>" +
-						" <Style id=\"fruit-banana\">\r\n" +
+						" <Style id=\"banana\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
 						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon49.png</href>\r\n" +
@@ -54,7 +46,7 @@ public class KML_Logger {
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
 						"    </Style>" +
-						" <Style id=\"fruit-apple\">\r\n" +
+						" <Style id=\"apple\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
 						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>\r\n" +
@@ -117,4 +109,5 @@ public class KML_Logger {
 			e.printStackTrace();
 		}
 	}	
-}
+
+	}

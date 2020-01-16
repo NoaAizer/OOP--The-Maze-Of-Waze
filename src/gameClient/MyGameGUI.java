@@ -156,6 +156,8 @@ public class MyGameGUI implements Runnable {
 			int nodeKey = (Integer)JOptionPane.showInputDialog(null, "Pick a node to place the robot:", 
 					"Add Robot:", JOptionPane.QUESTION_MESSAGE, null, options, null);
 			arena.getGame().addRobot(nodeKey);
+			Date date=new Date();
+			kml.addPlaceMark(date, "robot", arena.getG().getNode(nodeKey).getLocation());
 			}catch(Exception e) {};
 
 		}
@@ -259,15 +261,17 @@ public class MyGameGUI implements Runnable {
 				Game_Algo.moveRobotsAuto(arena.getGame(),arena.getG(),arena.getFruitsList());
 			else
 				StdDraw.manMode=true;
+			for (node_data node : arena.getG().getV()) {
+				Date date = new Date();
+				kml.addPlaceMark(date, "node", node.getLocation());
+			}
 			try
 			{
 				Thread.sleep(10);
 				if(index%2==0)
 					repaint();
-				for (node_data node : arena.getG().getV()) {
-					Date date = new Date();
-					kml.addPlaceMark(date, "node", node.getLocation());
-				}
+
+				
 				index++;
 				//kml.addPlaceMark(date, id, location);
 			}
