@@ -3,6 +3,7 @@ package gameClient;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -282,7 +283,14 @@ public class MyGameGUI implements Runnable {
 			{
 				Thread.sleep(100);
 				if(index%2==0)
+				{
 					repaint();
+					for (node_data node : arena.getGraph().getV()) {
+						Date date = new Date();
+						kml.addPlaceMark(date, "node", node.getLocation());
+					}
+					//kml.addPlaceMark(date, id, location);
+				}
 				index++;
 			}
 			catch(InterruptedException e)

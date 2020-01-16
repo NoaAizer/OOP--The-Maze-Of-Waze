@@ -5,8 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import utils.Point3D;
 
@@ -64,19 +66,22 @@ public class KML_Logger {
 				);
 	}
 
-	public void addPlaceMark(String id, Point3D location)
+	public void addPlaceMark(Date date, String id, Point3D location)
 	{
-		//Create formatter
-		DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-		//Local date time instance
-		LocalDateTime localDateTime = LocalDateTime.now();
-		//Get formatted String
-		String ldtString = FOMATTER.format(localDateTime);
+//		//Create formatter
+//		DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+//		//Local date time instance
+//		LocalDateTime localDateTime = LocalDateTime.now();
+//		//Get formatted String
+//		String ldtString = FOMATTER.format(localDateTime);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'z'");
+		String time_stamp = sdf.format(date);
 
 		info.append(
 				"    <Placemark>\r\n" +
 						"      <TimeStamp>\r\n" +
-						"        <when>" + ldtString+ "</when>\r\n" +
+						"        <when>" + time_stamp+ "</when>\r\n" +
 						"      </TimeStamp>\r\n" +
 						"      <styleUrl>#" + id + "</styleUrl>\r\n" +
 						"      <Point>\r\n" +
@@ -86,6 +91,7 @@ public class KML_Logger {
 				);
 
 	}
+		
 	public void kmlEnd()
 	{
 		info.append(
