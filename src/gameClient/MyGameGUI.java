@@ -248,7 +248,6 @@ public class MyGameGUI implements Runnable {
 		StdDraw.show();
 
 	}
-
 	public void run() 
 	{
 		arena.getGame().startGame();

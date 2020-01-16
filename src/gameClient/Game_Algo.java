@@ -2,6 +2,7 @@ package gameClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Game_Algo {
 
 	public static final double EPS1=0.000001;
 	public static Graph_Algo algo;
+	public static KML_Logger kml;
 
 	/**
 	 * Creates a new arena from the json file of the service game;
@@ -79,6 +81,14 @@ public class Game_Algo {
 			String fruit=frItr.next();
 			fruit=fruit.substring(9,fruit.length()-1);
 			Fruit f=createFruit(fruit);
+			if (kml != null) {
+				Date date = new Date();
+				if (f.getType() == -1) {
+					kml.addPlaceMark(date, "banana", f.getPos());
+				} else {
+					kml.addPlaceMark(date, "apple", f.getPos());
+				}
+			}
 			fruits.add(f);//add to the list of fruit
 		}
 		//sort the array by value
@@ -126,6 +136,10 @@ public class Game_Algo {
 		for(String robStr:rob)
 		{
 			Robot r = createRobot(robStr);
+			if (kml != null) {
+				Date date = new Date();
+				kml.addPlaceMark(date, "robot", r.getPos());
+			}
 			robots.add(r);
 		}
 		return robots;

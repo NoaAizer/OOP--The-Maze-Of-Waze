@@ -8,8 +8,15 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
+import Server.game_service;
+import dataStructure.edge_data;
+import dataStructure.graph;
+import dataStructure.node_data;
+import elements.Fruit;
+import elements.Robot;
 import utils.Point3D;
 
 
@@ -23,7 +30,7 @@ public class KML_Logger {
 		info = new StringBuilder();
 		kmlStart();
 	}
-
+	
 	public void kmlStart()
 	{
 		info.append(
