@@ -1,20 +1,11 @@
 package elements;
 
-
-
 import utils.Point3D;
 
-public class Fruit {
+public class Fruit implements Comparable<Fruit>{
 	public double value;
 	public double type;
 	private String pos;
-
-	public Fruit(double value,int type,String str)
-	{
-		this.value=value;
-		this.type=type;
-		this.pos=str;
-	}
 
 	public double getValue() {
 		return value;
@@ -34,5 +25,13 @@ public class Fruit {
 	public String toString() {
 		return "value "+value+" type "+type+ " pos "+pos;
 	}
+/**
+ * Compare 2 fruits by value.
+ */
+	@Override
+	public int compareTo(Fruit f) {
+		Double val= this.value;
+		return  -val.compareTo(f.value); 
 
+	}
 }

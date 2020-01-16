@@ -1,23 +1,24 @@
 package utils;
 
 import gameClient.Game_Algo;
+import gameClient.MoveManual;
 import gameClient.MyGameGUI;
 
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
-import dataStructure.node_data;
+
 import elements.Robot;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FileDialog;
+
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,9 +44,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.Collection;
+
 import java.util.LinkedList;
-import java.util.List;
+
 import java.util.TreeSet;
 import java.util.NoSuchElementException;
 import javax.imageio.ImageIO;
@@ -53,11 +54,11 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
+
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+
 import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+
 
 
 
@@ -732,41 +733,41 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 	// create the menu bar (changed to private)
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	private static JMenuBar createMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu1 = new JMenu("File");
-		JMenu menu2 = new JMenu("Algo");
-		menuBar.add(menu1);
-		menuBar.add(menu2);
-		JMenuItem item1f = new JMenuItem("Save image");
-		JMenuItem item2f = new JMenuItem("Load Graph");
-		JMenuItem item3f = new JMenuItem("Save Graph_file");
-		item1f.addActionListener(std);
-		item2f.addActionListener(std);
-		item3f.addActionListener(std);
-		item1f.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		item2f.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		menu1.add(item1f);
-		menu1.add(item2f);
-		menu1.add(item3f);
-		JMenuItem item1a = new JMenuItem("Is_Connected");
-		JMenuItem item2a = new JMenuItem("shortestPathDist");
-		JMenuItem item3a = new JMenuItem("shortestPath");
-		JMenuItem item4a = new JMenuItem("TSP");
-		item1a.addActionListener(std);
-		item2a.addActionListener(std);
-		item3a.addActionListener(std);
-		item4a.addActionListener(std);
-		menu2.add(item1a);
-		menu2.add(item2a);
-		menu2.add(item3a);
-		menu2.add(item4a);
-
-		return menuBar;
-
+//		JMenuBar menuBar = new JMenuBar();
+//		JMenu menu1 = new JMenu("File");
+//		JMenu menu2 = new JMenu("Algo");
+//		menuBar.add(menu1);
+//		menuBar.add(menu2);
+//		JMenuItem item1f = new JMenuItem("Save image");
+//		JMenuItem item2f = new JMenuItem("Load Graph");
+//		JMenuItem item3f = new JMenuItem("Save Graph_file");
+//		item1f.addActionListener(std);
+//		item2f.addActionListener(std);
+//		item3f.addActionListener(std);
+//		item1f.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+//				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+//		item2f.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+//				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+//		menu1.add(item1f);
+//		menu1.add(item2f);
+//		menu1.add(item3f);
+//		JMenuItem item1a = new JMenuItem("Is_Connected");
+//		JMenuItem item2a = new JMenuItem("shortestPathDist");
+//		JMenuItem item3a = new JMenuItem("shortestPath");
+//		JMenuItem item4a = new JMenuItem("TSP");
+//		item1a.addActionListener(std);
+//		item2a.addActionListener(std);
+//		item3a.addActionListener(std);
+//		item4a.addActionListener(std);
+//		menu2.add(item1a);
+//		menu2.add(item2a);
+//		menu2.add(item3a);
+//		menu2.add(item4a);
+//
+//		return menuBar;
+return null;
 	}
 
 
@@ -1709,145 +1710,142 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	@Override
 
 	public void actionPerformed(ActionEvent e) {
-		String str = e.getActionCommand();
-		if(str.startsWith("Save image")) {
-			FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
-			chooser.setVisible(true);
-			String filename = chooser.getFile();
-			if (filename != null) {
-				StdDraw.save(chooser.getDirectory() + File.separator + chooser.getFile());
-			}
-		}
-
-		if(str.startsWith("Load")) {
-			FileDialog chooser = new FileDialog(StdDraw.frame, "Loading graph file", FileDialog.LOAD);
-			chooser.setVisible(true);
-			String filename = chooser.getFile();
-			if (filename != null) {
-				StdDraw.load(chooser.getDirectory() + File.separator + chooser.getFile());
-				gui.update();
-			}
-		}
-
-		if(str.startsWith("Save Graph")) {
-
-			String filename = JOptionPane.showInputDialog(null, "Input a file name:");
-			if (filename != null) {
-				graph.save(filename);
-			}
-
-		}
-		if (str.equals("Is_Connected")){
-			boolean ans=graph.isConnected();
-			if(ans)
-				JOptionPane.showMessageDialog(null,"The graph is connecnted!");
-			else
-				JOptionPane.showMessageDialog(null,"The graph is not connecnted!");
-
-		}
-		if (str.equals("shortestPathDist")) {
-			Collection<node_data> arr_n= graph.getG().getV();
-			Integer[] options= new Integer [arr_n.size()];
-			int i=0;
-			for (node_data n : arr_n) {
-				options[i]= n.getKey();
-				i++;
-			}
-			try {
-				int src = (Integer)JOptionPane.showInputDialog(null, "Pick a source node:", 
-						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
-						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-
-				double ans=graph.shortestPathDist(src,dest);
-				if(ans !=Double.POSITIVE_INFINITY)
-				{
-					JOptionPane.showMessageDialog(null,"The shortest path distance is:\n "+ans,"shortest path points "+src+"-"+dest, JOptionPane.INFORMATION_MESSAGE);
-				}
-				else 
-				{
-					JOptionPane.showMessageDialog(null,"Error, There is no path between the points!", "shortest path points \"+src+\"-\"+dst", JOptionPane.INFORMATION_MESSAGE);	
-				}
-			}
-			catch(Exception ex) {
-			}
-		}
-		if (str.equals("shortestPath")) {
-			Collection<node_data> arr_n= graph.getG().getV();
-			Integer[] options= new Integer [arr_n.size()];
-			int i=0;
-			for (node_data n : arr_n) {
-				options[i]= n.getKey();
-				i++;
-			}
-			try {
-				int src = (Integer)JOptionPane.showInputDialog(null, "Pick a source node:", 
-						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
-						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-
-				List<node_data> ans=graph.shortestPath(src, dest);
-
-				if(ans != null)
-				{
-					String ans_keys="";
-					for (node_data n : ans) {
-						if(!n.equals(ans.get(ans.size()-1)))
-							ans_keys+=n.getKey()+"->";
-						else
-							ans_keys+=n.getKey();
-					}
-					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"shortest path points "+src+"-"+dest, JOptionPane.INFORMATION_MESSAGE);
-				}
-				else 
-				{
-					JOptionPane.showMessageDialog(null,"Error: There is no path between the points :", "shortest path points \"+src+\"-\"+dst", JOptionPane.INFORMATION_MESSAGE);	
-				}
-			}
-			catch(Exception ex) {
-
-			}
-		}
-		//		if(str.equals("TSP")) {
-		//
-		//			if(keys.size() <= 1) {
-		//				JOptionPane.showMessageDialog(null, "Please pick at least 2 nodes on the frame\n and then press TSP again! ","Error", JOptionPane.ERROR_MESSAGE);
-		//				gui.init((DGraph) graph.getG());
-		//				gui.update();
-		//			}
-		//			else {
-		//
-		//				JOptionPane.showMessageDialog(null,"The node you have selected:\n "+keys,"TSP", JOptionPane.INFORMATION_MESSAGE);
-		//				List<Integer> targets = new ArrayList<Integer>();
-		//				targets.addAll(keys);
-		//				List<node_data> ans = graph.TSP(targets);
-		//
-		//				if(ans != null)
-		//				{
-		//					String ans_keys="";
-		//					for (node_data n : ans) {
-		//						if(!n.equals(ans.get(ans.size()-1)))
-		//							ans_keys+=n.getKey()+"->";
-		//						else
-		//							ans_keys+=n.getKey();
-		//					}
-		//					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"TSP result", JOptionPane.INFORMATION_MESSAGE);
-		//				}
-		//				else 
-		//				{
-		//					JOptionPane.showMessageDialog(null,"Error: There is no path between all those points :", "TSP result", JOptionPane.INFORMATION_MESSAGE);	
-		//				}
-		//				gui.init((DGraph) graph.getG());
-		//				gui.update();
-		//				StdDraw.show();
-		//				keys.clear();
-		//			}
-		//		}
-
+//		String str = e.getActionCommand();
+//		if(str.startsWith("Save image")) {
+//			FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
+//			chooser.setVisible(true);
+//			String filename = chooser.getFile();
+//			if (filename != null) {
+//				StdDraw.save(chooser.getDirectory() + File.separator + chooser.getFile());
+//			}
+//		}
+//
+//		if(str.startsWith("Load")) {
+//			FileDialog chooser = new FileDialog(StdDraw.frame, "Loading graph file", FileDialog.LOAD);
+//			chooser.setVisible(true);
+//			String filename = chooser.getFile();
+//			if (filename != null) {
+//				StdDraw.load(chooser.getDirectory() + File.separator + chooser.getFile());
+//				gui.update();
+//			}
+//		}
+//
+//		if(str.startsWith("Save Graph")) {
+//
+//			String filename = JOptionPane.showInputDialog(null, "Input a file name:");
+//			if (filename != null) {
+//				graph.save(filename);
+//			}
+//
+//		}
+//		if (str.equals("Is_Connected")){
+//			boolean ans=graph.isConnected();
+//			if(ans)
+//				JOptionPane.showMessageDialog(null,"The graph is connecnted!");
+//			else
+//				JOptionPane.showMessageDialog(null,"The graph is not connecnted!");
+//
+//		}
+//		if (str.equals("shortestPathDist")) {
+//			Collection<node_data> arr_n= graph.getG().getV();
+//			Integer[] options= new Integer [arr_n.size()];
+//			int i=0;
+//			for (node_data n : arr_n) {
+//				options[i]= n.getKey();
+//				i++;
+//			}
+//			try {
+//				int src = (Integer)JOptionPane.showInputDialog(null, "Pick a source node:", 
+//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+//				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
+//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+//
+//				double ans=graph.shortestPathDist(src,dest);
+//				if(ans !=Double.POSITIVE_INFINITY)
+//				{
+//					JOptionPane.showMessageDialog(null,"The shortest path distance is:\n "+ans,"shortest path points "+src+"-"+dest, JOptionPane.INFORMATION_MESSAGE);
+//				}
+//				else 
+//				{
+//					JOptionPane.showMessageDialog(null,"Error, There is no path between the points!", "shortest path points \"+src+\"-\"+dst", JOptionPane.INFORMATION_MESSAGE);	
+//				}
+//			}
+//			catch(Exception ex) {
+//			}
+//		}
+//		if (str.equals("shortestPath")) {
+//			Collection<node_data> arr_n= graph.getG().getV();
+//			Integer[] options= new Integer [arr_n.size()];
+//			int i=0;
+//			for (node_data n : arr_n) {
+//				options[i]= n.getKey();
+//				i++;
+//			}
+//			try {
+//				int src = (Integer)JOptionPane.showInputDialog(null, "Pick a source node:", 
+//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+//				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
+//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+//
+//				List<node_data> ans=graph.shortestPath(src, dest);
+//
+//				if(ans != null)
+//				{
+//					String ans_keys="";
+//					for (node_data n : ans) {
+//						if(!n.equals(ans.get(ans.size()-1)))
+//							ans_keys+=n.getKey()+"->";
+//						else
+//							ans_keys+=n.getKey();
+//					}
+//					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"shortest path points "+src+"-"+dest, JOptionPane.INFORMATION_MESSAGE);
+//				}
+//				else 
+//				{
+//					JOptionPane.showMessageDialog(null,"Error: There is no path between the points :", "shortest path points \"+src+\"-\"+dst", JOptionPane.INFORMATION_MESSAGE);	
+//				}
+//			}
+//			catch(Exception ex) {
+//
+//			}
+//		}
+//		//		if(str.equals("TSP")) {
+//		//
+//		//			if(keys.size() <= 1) {
+//		//				JOptionPane.showMessageDialog(null, "Please pick at least 2 nodes on the frame\n and then press TSP again! ","Error", JOptionPane.ERROR_MESSAGE);
+//		//				gui.init((DGraph) graph.getG());
+//		//				gui.update();
+//		//			}
+//		//			else {
+//		//
+//		//				JOptionPane.showMessageDialog(null,"The node you have selected:\n "+keys,"TSP", JOptionPane.INFORMATION_MESSAGE);
+//		//				List<Integer> targets = new ArrayList<Integer>();
+//		//				targets.addAll(keys);
+//		//				List<node_data> ans = graph.TSP(targets);
+//		//
+//		//				if(ans != null)
+//		//				{
+//		//					String ans_keys="";
+//		//					for (node_data n : ans) {
+//		//						if(!n.equals(ans.get(ans.size()-1)))
+//		//							ans_keys+=n.getKey()+"->";
+//		//						else
+//		//							ans_keys+=n.getKey();
+//		//					}
+//		//					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"TSP result", JOptionPane.INFORMATION_MESSAGE);
+//		//				}
+//		//				else 
+//		//				{
+//		//					JOptionPane.showMessageDialog(null,"Error: There is no path between all those points :", "TSP result", JOptionPane.INFORMATION_MESSAGE);	
+//		//				}
+//		//				gui.init((DGraph) graph.getG());
+//		//				gui.update();
+//		//				StdDraw.show();
+//		//				keys.clear();
+//		//			}
+//		//		}
+//
 	}
-
-
-
 
 
 	/***************************************************************************
@@ -1900,11 +1898,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		}
 	}
 	private static MoveManual man;
-
-	public static int currKey=-1;
-	public static int currRobot=-1;
-
-	public static Robot r=null;
+	private static int currKey=-1;
+	private static int currRobot=-1;
+	private static Robot r=null;
 	public static boolean manMode=false;
 	/**
 	 * This method cannot be called directly.
@@ -1913,8 +1909,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	public void mouseClicked(MouseEvent e) {
 		if(manMode) {
 			Point3D p = new Point3D (mouseX,mouseY);
-			currKey = Game_Algo.isANode((DGraph) graph.getG(),p.x(),p.y());
-			r = Game_Algo.isARobot(MyGameGUI.getGame(),(DGraph)graph.getG(),p.x(),p.y());
+			currKey = Game_Algo.isANode(p.x(),p.y());
+			r = Game_Algo.isARobot(p.x(),p.y());
 			if(r!=null)currRobot=r.getId();
 			if (isFirst){
 				man=new MoveManual(currKey,currRobot);
