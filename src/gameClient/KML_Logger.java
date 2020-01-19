@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 
 import java.io.PrintWriter;
 
+import javax.swing.JOptionPane;
 
 import utils.Point3D;
 
@@ -14,20 +15,20 @@ public class KML_Logger {
 	private int stage;
 	private StringBuilder info;
 
-/**
- * Create a KML file of the given game.
- * @param stage represents the stage of the given game.
- * @param time represents the length of the game (30 seconds/ 60 seconds).
- */
+	/**
+	 * Create a KML file of the given game.
+	 * @param stage represents the stage of the given game.
+	 * @param time represents the length of the game (30 seconds/ 60 seconds).
+	 */
 	public KML_Logger(int stage, long time) {
 		this.gameLong=time;
 		this.stage = stage;
 		info = new StringBuilder();
 		kmlStart();
 	}
-/**
- * Starts write the KML file.
- */
+	/**
+	 * Starts write the KML file.
+	 */
 	public void kmlStart()
 	{
 		info.append(
@@ -82,28 +83,28 @@ public class KML_Logger {
 						"	</Style>\r\n" 
 				);
 	}
-/**
- * Adds the edges of the graph to the KML.		
- * @param p1 represents the source node location.
- * @param p2 represents the destination node location.
- */
- public void addEdge(Point3D p1, Point3D p2) {
-	 info.append(
-						"    <Placemark>\r\n" +
-								"      <styleUrl>#" + "edge" + "</styleUrl>\r\n" +
-								"      <LineString>\r\n" +
-								"        <coordinates>" + p1.x()+","+p1.y()+",0\r\n"+
-								p2.x()+","+p2.y()+",0\r\n"+ "</coordinates>\r\n" +
-								"</LineString>\r\n"+
-								"    </Placemark>\r\n"
-						);
- }
- 
- /**
-  * Adds an element to the KML.
-  * @param id represents the type of the element.
-  * @param location represents the location of the element on the map.
-  */
+	/**
+	 * Adds the edges of the graph to the KML.		
+	 * @param p1 represents the source node location.
+	 * @param p2 represents the destination node location.
+	 */
+	public void addEdge(Point3D p1, Point3D p2) {
+		info.append(
+				"    <Placemark>\r\n" +
+						"      <styleUrl>#" + "edge" + "</styleUrl>\r\n" +
+						"      <LineString>\r\n" +
+						"        <coordinates>" + p1.x()+","+p1.y()+",0\r\n"+
+						p2.x()+","+p2.y()+",0\r\n"+ "</coordinates>\r\n" +
+						"</LineString>\r\n"+
+						"    </Placemark>\r\n"
+				);
+	}
+
+	/**
+	 * Adds an element to the KML.
+	 * @param id represents the type of the element.
+	 * @param location represents the location of the element on the map.
+	 */
 	public void addPlaceMark(String id, Point3D location)
 	{
 		long time_start=(gameLong-MyGameGUI.arena.getGame().timeToEnd())/1000;
@@ -122,25 +123,31 @@ public class KML_Logger {
 				);
 
 	}
-/**
- * Save KML to a file.
- */
+	/**
+	 * Save KML to a file.
+	 */
 	public void kmlEnd()
 	{
-		info.append(
-				"  \r\n</Document>\r\n" +
-						"</kml>"
-				);
-		try
-		{ 
-			String fileName = "data/"+this.stage + ".kml";
-			PrintWriter pw = new PrintWriter(new File(fileName));
-			pw.write(info.toString());
-			pw.close();
+		String[] options = new String[] {"Yes", "No"};
+		int ans = JOptionPane.showOptionDialog(null, "Do you want to save as a KML file?:", "KML file",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, options[0]);
+		if(ans==0) {
+			info.append(
+					"  \r\n</Document>\r\n" +
+							"</kml>"
+					);
+			try
+			{ 
+				String fileName = "data/"+this.stage + ".kml";
+				PrintWriter pw = new PrintWriter(new File(fileName));
+				pw.write(info.toString());
+				pw.close();
+System.out.println("file saved");
 
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

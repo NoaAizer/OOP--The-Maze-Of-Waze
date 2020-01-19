@@ -251,6 +251,7 @@ public class Game_Algo {
 				dest=node;
 			}
 		}
+		
 		edgeOfFruit(nodes.get(dest)).setTag(1);
 		return algo.shortestPath(src, dest).get(1).getKey();
 	}
