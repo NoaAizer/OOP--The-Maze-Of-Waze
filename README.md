@@ -16,10 +16,39 @@ When playing the game the user chooses the stage and whether he wants automatic 
 In this project we received data from a server (jar file) on which the game is performed.<br />
 Obtaining the information was based on strings represented as JSON.<br />
 
-You can also see the graph, bots, and fruits in the KML file.<br />
+In the project we have 8 packages:<br />
+ 3 packages taken from previous assignment - Graph.<br />
+**Algorithms**<br />
+**Data Structures**<br />
+**Utils**<br />
+The package we programmed:<br />
+**Elements:**<br />
+Fruit<br />
+Robot<br />
+Arena<br />
+**GameClient:**<br />
+KML_Logger<br />
+MoveManual<br />
+MyGameGUI<br />
+SimpleGameClient<br />
+**Tests:**<br />
+################We have created 2 JUNIT test (using JUNIT 5 version) : DGraph Test and Graph Algo Tests that try to build a graph and test some algorithms on it.
+
+**Data:**<br />
+In this package you will find the KML files, and the track images.<br />
+**Lib:**<br />
+java-json.jar<br />
+GameServer_v0.27.jar<br />
+gson-2.8.6.jar<br />
+
+An explanation of the game and an extension of each package in the project can be found at WIKI.<br />
 
 **An example for a stage 10 in play:**<br />
 
-![An Example:](https://github.com/NoaAizer/OOP_Ex3/blob/master/10.png)
+![An Example:](https://github.com/NoaAizer/OOP_Ex3/blob/master/stage%2010%20.png)<br />
+
+You can also see the graph, robots, and fruits in the KML file.<br />
+The KML file can be opened in Google Earth, the view you will receive -<br />
+![An Example:](https://github.com/NoaAizer/OOP_Ex3/blob/master/level%2010%20-%20kml.jpeg)
 
 Enjoy!
