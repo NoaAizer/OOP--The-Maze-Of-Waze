@@ -32,8 +32,7 @@ MoveManual<br />
 MyGameGUI<br />
 SimpleGameClient<br />
 **Tests:**<br />
-################We have created 2 JUNIT test (using JUNIT 5 version) : DGraph Test and Graph Algo Tests that try to build a graph and test some algorithms on it.
-
+We have created 5 JUNIT test (using JUNIT 5 version).<br />
 **Data:**<br />
 In this package you will find the KML files, and the track images.<br />
 **Lib:**<br />
