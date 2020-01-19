@@ -50,11 +50,18 @@ public class Game_Algo {
 		return Game_Algo.createArenaFromJson(MyGameGUI.arena.getGame().toString()).getGrade();
 	}
 	/**
+	 * Updates the moves of in the game.
+	 * @return the amount of moves in the game.
+	 */
+	public static int updateMoves() {
+		return Game_Algo.createArenaFromJson(MyGameGUI.arena.getGame().toString()).getMoves();
+	}
+	/**
 	 * Creates a fruit from a string (json).
 	 * @param fruitStr represents a json file of a fruit.
 	 * @return an object of the given fruit.
 	 */
-	private static Fruit createFruit(String fruitStr) {
+	public static Fruit createFruit(String fruitStr) {
 		Gson gson = new Gson();
 		try
 		{
@@ -131,7 +138,6 @@ public class Game_Algo {
 
 	/**
 	 * Position the robots in an auto mode next to the fruits according to their values (from high to low).
-	 * @param fruits represents a list of all the fruit in the game.
 	 */
 	public static void autoRobotLocation()
 	{
@@ -238,7 +244,7 @@ public class Game_Algo {
 	 * @param src represents the robot node.
 	 * @return the source node of the closet fruit edge.
 	 */
-	public static int closetFruit(int src) {
+	private static int closetFruit(int src) {
 		double min=Double.POSITIVE_INFINITY;
 		int dest=-1;
 		double dist;
@@ -289,7 +295,7 @@ public class Game_Algo {
 	 * @param fr represents the given fruit.
 	 * @return the edge of the given fruit.
 	 */
-	public static edge_data edgeOfFruit(Fruit fr) {
+	private static edge_data edgeOfFruit(Fruit fr) {
 		for(node_data n: MyGameGUI.arena.getG().getV()) {	
 			for(edge_data e:  MyGameGUI.arena.getG().getE(n.getKey())) {
 				if(isOnEdge(fr.getPos(), e, fr.getType()))
@@ -318,7 +324,7 @@ public class Game_Algo {
 	 * @param f represents the given fruit.
 	 * @return the found node key, returns -1 if the node cannot be found.
 	 */
-	private static int findFruitSrc(Fruit f) {
+	public static int findFruitSrc(Fruit f) {
 		double type=f.getType();
 		for(node_data n: MyGameGUI.arena.getG().getV()) {	
 			for(edge_data e:  MyGameGUI.arena.getG().getE(n.getKey())) {

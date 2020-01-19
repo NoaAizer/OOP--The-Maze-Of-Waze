@@ -74,7 +74,7 @@ public class Point3D implements Serializable
 
     /**
      * Multiplication of this point by scalar (d)
-     * @param d
+     * @param d represents a scalar
      */
     public void factor(double d){
         _x *= d;

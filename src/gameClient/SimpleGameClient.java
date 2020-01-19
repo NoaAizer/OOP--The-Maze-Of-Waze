@@ -34,7 +34,7 @@ import dataStructure.graph;
 public class SimpleGameClient {
 	public static void main(String[] a) {
 		new MyGameGUI();
-			//test1();
+		//	test1();
 	}
 	public static void test1() {
 		game_service game = Game_Server.getServer(2); // you have [0,23] games
@@ -90,9 +90,9 @@ public class SimpleGameClient {
 	}
 	/**
 	 * a very simple random walk implementation!
-	 * @param g
-	 * @param src
-	 * @return
+	 * @param g represents the current graph
+	 * @param src represents the node of the current robot.
+	 * @return a random neighbor node the robot should go to.
 	 */
 	private static int nextNode(graph g, int src) {
 		int ans = -1;

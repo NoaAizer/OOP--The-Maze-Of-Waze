@@ -80,7 +80,7 @@ public class Arena {
 
 	/**
 	 * Update the fruits list of the game;
-	 * @param robots represents the updated fruits list.
+	 * @param fruits represents the updated fruits list.
 	 */
 	public void setFruitsList(List<Fruit> fruits) {
 		this.fruitsList=fruits;

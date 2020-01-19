@@ -33,14 +33,14 @@ public interface graph {
  * * Note: this method should run in O(1) time.
  * @param src - the source of the edge.
  * @param dest - the destination of the edge.
- * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
+ * @param w - positive weight representing the cost (aka time, price, etc) between src--dest.
  */
 	public void connect(int src, int dest, double w);
 	/**
 	 * This method return a pointer (shallow copy) for the
 	 * collection representing all the nodes in the graph. 
 	 * Note: this method should run in O(1) time.
-	 * @return Collection<node_data>
+	 * @return Collection of node_data
 	 */
 	public Collection<node_data> getV();
 	/**
@@ -48,7 +48,7 @@ public interface graph {
 	 * collection representing all the edges getting out of 
 	 * the given node (all the edges starting (source) at the given node). 
 	 * Note: this method should run in O(1) time.
-	 * @return Collection<edge_data>
+	 * @return Collection of edge_data 
 	 */
 	public Collection<edge_data> getE(int node_id);
 	/**

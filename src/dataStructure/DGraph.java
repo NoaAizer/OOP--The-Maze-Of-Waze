@@ -83,7 +83,7 @@ public class DGraph implements graph, Serializable{
 	 * Note: this method should run in O(1) time.
 	 * @param src represents the source node
 	 * @param dest represents the destination node.
-	 * @return
+	 * @return the data of the edge, null if none.
 	 */
 	@Override
 	public edge_data getEdge(int src, int dest) {
@@ -110,7 +110,7 @@ public class DGraph implements graph, Serializable{
 	 * Connect an edge with weight w between node src to node dest.
 	 * @param src - the source of the edge.
 	 * @param dest - the destination of the edge.
-	 * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
+	 * @param w - positive weight representing the cost (aka time, price, etc) between src--dest.
 	 */
 	@Override
 	public void connect(int src, int dest, double w) {
@@ -137,7 +137,7 @@ public class DGraph implements graph, Serializable{
 	/**
 	 * This method return a pointer (shallow copy) for the
 	 * collection representing all the nodes in the graph. 
-	 * @return Collection<node_data> represents a list of the nodes in the graph.
+	 * @return Collection of node_data elements represents a list of the nodes in the graph.
 	 */
 	@Override
 	public Collection<node_data> getV() {
@@ -147,7 +147,7 @@ public class DGraph implements graph, Serializable{
 	 * This method return a pointer (shallow copy) for the
 	 * collection representing all the edges getting out of 
 	 * the given node (all the edges starting (source) at the given node). 
-	 * @return Collection<edge_data> represents a list of the edges in the graph.
+	 * @return Collection of edge_data elements represents a list of the edges in the graph.
 	 */
 	@Override
 	public Collection<edge_data> getE(int node_id) {
@@ -204,7 +204,7 @@ public class DGraph implements graph, Serializable{
 		return null;
 	}
 	/** Returns the number of vertices (nodes) in the graph.
-	 * @return
+	 * @return the number of vertices.
 	 */
 	@Override
 	public int nodeSize() {
@@ -213,7 +213,7 @@ public class DGraph implements graph, Serializable{
 	/** 
 	 * Returns the number of edges (assume directional graph).
 	 * Note: this method should run in O(1) time.
-	 * @return
+	 * @return the number of edges.
 	 */
 	@Override
 	public int edgeSize() {
@@ -221,7 +221,7 @@ public class DGraph implements graph, Serializable{
 	}
 	/**
 	 * Returns the Mode Count - for testing changes in the graph.
-	 * @return
+	 * @return the amount of change made on the graph.
 	 */
 	@Override
 	public int getMC() {
@@ -241,8 +241,11 @@ public class DGraph implements graph, Serializable{
 	public HashMap<Integer, HashMap<Integer, edge_data>> getEdges() {
 		return this.edges;
 	}
-	//public void init(String json_file) {
 
+/**
+ * Initializes a DGraph from Json file.
+ * @param jsonSTR represents the given Json file.
+ */
 	public void init(final String jsonSTR) {
 		try {
 			node_data.resetCount();
@@ -267,14 +270,17 @@ public class DGraph implements graph, Serializable{
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}		
+	}
+	/**
+	 * Converts a DGraph to json file.
+	 * @return a json file of a DGrpah.
+	 */
 	public String toJSON() {
         final JSONObject allEmps = new JSONObject();
         final JSONArray VArray = new JSONArray();
         final JSONArray EArray = new JSONArray();
         final Collection<node_data> V = this.getV();
         final Iterator<node_data> iter = V.iterator();
-        final Collection<edge_data> E = null;
         Iterator<edge_data> itr = null;
         try {
             while (iter.hasNext()) {

@@ -22,7 +22,7 @@ import dataStructure.*;
 /**
  * This empty class represents the set of graph-theory algorithms
  * which should be implemented as part of Ex2 - Do edit this class.
- * @author 
+ * @author Noa Aizer and Lior Samuel-Levi
  *
  */
 public class Graph_Algo implements graph_algorithms{
@@ -95,7 +95,7 @@ public class Graph_Algo implements graph_algorithms{
 	}
 	/**
 	 * Returns true if and only if (iff) there is a valid path from EVREY node to each
-	 * other node. NOTE: assume directional graph - a valid path (a-->b) does NOT imply a valid path (b-->a).
+	 * other node. NOTE: assume directional graph - a valid path (a--b) does NOT imply a valid path (b--a).
 	 * @return TRUE- if there a valid path from Every node to each, otherwise return FALSE.
 	 */
 	@Override
@@ -111,7 +111,7 @@ public class Graph_Algo implements graph_algorithms{
 	 * returns the length of the shortest path between src to dest
 	 * @param src - start node
 	 * @param dest - end (target) node
-	 * @return
+	 * @return the shortest distance between the 2 nodes.
 	 */
 	@Override
 	public double shortestPathDist(int src, int dest) {
@@ -160,11 +160,11 @@ public class Graph_Algo implements graph_algorithms{
 
 	/**
 	 * returns the the shortest path between src to dest - as an ordered List of nodes:
-	 * src--> n1-->n2-->...dest
+	 * src-- n1--n2--...dest
 	 * see: https://en.wikipedia.org/wiki/Shortest_path_problem
 	 * @param src - start node
 	 * @param dest - end (target) node
-	 * @return
+	 * @return a list of nodes represents the path between the 2 given nodes.
 	 */
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
@@ -300,6 +300,7 @@ public class Graph_Algo implements graph_algorithms{
 	/**
 	 * Runs DFS starting from the first node.
 	 * @param key represents the first node.
+	 * @param g2 represents the current graph.
 	 */
 	private void DFSUtil(int key,graph g2) 
 	{ 
@@ -319,6 +320,7 @@ public class Graph_Algo implements graph_algorithms{
 	}
 	/**
 	 * Transposes the original graph.
+	 * @param g2 represents the current graph.
 	 * @return transpose of this graph 
 	 */
 	private graph getTranspose(graph g2) 

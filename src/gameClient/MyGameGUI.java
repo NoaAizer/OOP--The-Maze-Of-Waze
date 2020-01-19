@@ -48,6 +48,31 @@ public class MyGameGUI implements Runnable {
 		t.start();
 	}
 	/**
+	 * Initialize an auto game with a given scenario number
+	 * @param sc_num represents the given scenario number.
+	 */
+	public MyGameGUI(int sc_num) {
+		this.scenario_num=sc_num;
+		game_service game=Game_Server.getServer(scenario_num);
+		this.mode=1;
+		arena=Game_Algo.createArenaFromJson(game.toString());
+		arena.init(game);
+		StdDraw.initGraph(arena.getG());
+		initSize();
+		StdDraw.enableDoubleBuffering();
+		drawGraph();
+		drawFruits();
+		StdDraw.show();
+		if(mode==1)
+			Game_Algo.autoRobotLocation();
+		else
+			PickARobotPlace();
+		drawRobots();
+		StdDraw.show();
+		Thread t=new Thread(this);
+		t.start();
+	}
+	/**
 	 * Initializes the level ,the mode and the game and draws the graph.
 	 */
 	private void init() {
@@ -240,7 +265,7 @@ public class MyGameGUI implements Runnable {
 	 * Draws all the fruits on the frame.
 	 */
 	public void drawFruits() {
-		for(Fruit f:arena.getFruitsList()) {
+		for(elements.Fruit f:arena.getFruitsList()) {
 			if(f.getType()==1)
 				StdDraw.picture(f.getPos().x(), f.getPos().y(), "data/apple.png",0.0007,0.0004);
 			else if(f.getType()==-1)
@@ -248,6 +273,10 @@ public class MyGameGUI implements Runnable {
 		}
 		StdDraw.show();
 
+	}
+	public int getScnum()
+	{
+		return this.scenario_num;
 	}
 	public void run() 
 	{
@@ -283,6 +312,7 @@ public class MyGameGUI implements Runnable {
 			}
 		}
 		kml.kmlEnd();
+		System.out.println(Game_Algo.updateMoves());
 		JOptionPane.showMessageDialog(null, "Game Over! \nYou earned "+Game_Algo.updateGrade()+ " points"
 				,"Finish", JOptionPane.CLOSED_OPTION);
 	}
