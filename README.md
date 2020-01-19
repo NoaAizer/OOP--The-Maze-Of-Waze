@@ -2,7 +2,7 @@
 
 ***Authors:** Noa Aizer & Lior Samuel-Levy*
 
-In this project we used the infrastructure of assignment 2 (graph).<br />
+In this project we used the infrastructure of assignment 2 - [Graph](https://github.com/NoaAizer/Graphs/wiki).<br />
 We have developed a logic for a game where a group of robots has to perform tasks by moving along the graph according to the direction of the side.<br />
 Each edge has a weight and a "coin" collection, for each robot we have planned movement so that at the allotted time the total "coin" will be maximum.<br />
 
