@@ -4,25 +4,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
 
 
 import utils.Point3D;
 
 
-public class KML_Logger{
-
+public class KML_Logger {
+	private long gameLong;
 	private int stage;
 	private StringBuilder info;
 
-	public KML_Logger(int stage) {
+/**
+ * Create a KML file of the given game.
+ * @param stage represents the stage of the given game.
+ * @param time represents the length of the game (30 seconds/ 60 seconds).
+ */
+	public KML_Logger(int stage, long time) {
+		this.gameLong=time;
 		this.stage = stage;
 		info = new StringBuilder();
 		kmlStart();
 	}
-	
+/**
+ * Starts write the KML file.
+ */
 	public void kmlStart()
 	{
 		info.append(
@@ -30,10 +35,17 @@ public class KML_Logger{
 						"<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n" +
 						"  <Document>\r\n" +
 						"    <name>" + "Game stage :"+this.stage + "</name>" +"\r\n"+
+						"<Style id=\"check-hide-children\">" + 
+						"      <ListStyle>\r\n" + 
+						"        <listItemType>checkHideChildren</listItemType>\r\n" + 
+						"      </ListStyle>\r\n" + 
+						"    </Style>\r\n" + 
+						"\r\n" + 
+						"    <styleUrl>#check-hide-children</styleUrl>"+
 						" <Style id=\"node\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal3/icon35.png</href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/paddle/blu-blank.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -41,7 +53,7 @@ public class KML_Logger{
 						" <Style id=\"banana\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon49.png</href>\r\n" +
+						"          <href>banana.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -49,7 +61,7 @@ public class KML_Logger{
 						" <Style id=\"apple\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>\r\n" +
+						"          <href>apple.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -57,31 +69,51 @@ public class KML_Logger{
 						" <Style id=\"robot\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal4/icon26.png></href>\r\n" +
+						"          <href>robot.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
-						"    </Style>"
+						"    </Style>"+
+						"	<Style id=\"edge\">\r\n" + 
+						"		<LineStyle>\r\n" + 
+						"			<color>ff336699</color>\r\n" + 
+						"			<width>4</width>\r\n" + 
+						"		</LineStyle>\r\n" + 
+						"	</Style>\r\n" 
 				);
 	}
-
-	public void addPlaceMark(Date date, String id, Point3D location)
+/**
+ * Adds the edges of the graph to the KML.		
+ * @param p1 represents the source node location.
+ * @param p2 represents the destination node location.
+ */
+ public void addEdge(Point3D p1, Point3D p2) {
+	 info.append(
+						"    <Placemark>\r\n" +
+								"      <styleUrl>#" + "edge" + "</styleUrl>\r\n" +
+								"      <LineString>\r\n" +
+								"        <coordinates>" + p1.x()+","+p1.y()+",0\r\n"+
+								p2.x()+","+p2.y()+",0\r\n"+ "</coordinates>\r\n" +
+								"</LineString>\r\n"+
+								"    </Placemark>\r\n"
+						);
+ }
+ 
+ /**
+  * Adds an element to the KML.
+  * @param id represents the type of the element.
+  * @param location represents the location of the element on the map.
+  */
+	public void addPlaceMark(String id, Point3D location)
 	{
-//		//Create formatter
-//		DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-//		//Local date time instance
-//		LocalDateTime localDateTime = LocalDateTime.now();
-//		//Get formatted String
-//		String ldtString = FOMATTER.format(localDateTime);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'z'");
-		String time_stamp = sdf.format(date);
-
+		long time_start=(gameLong-MyGameGUI.arena.getGame().timeToEnd())/1000;
+		long time_end=(gameLong-MyGameGUI.arena.getGame().timeToEnd()+150)/1000;
 		info.append(
 				"    <Placemark>\r\n" +
-						"      <TimeStamp>\r\n" +
-						"        <when>" + time_stamp+ "</when>\r\n" +
-						"      </TimeStamp>\r\n" +
+						"      <TimeSpan>\r\n" +
+						"     <begin>"+time_start+"</begin>\r\n" + 
+						"        <end>"+(time_end)+"</end>"+
+						" </TimeSpan>\r\n" + 
 						"      <styleUrl>#" + id + "</styleUrl>\r\n" +
 						"      <Point>\r\n" +
 						"        <coordinates>" + location.toString() + "</coordinates>\r\n" +
@@ -90,7 +122,9 @@ public class KML_Logger{
 				);
 
 	}
-		
+/**
+ * Save KML to a file.
+ */
 	public void kmlEnd()
 	{
 		info.append(
@@ -98,16 +132,17 @@ public class KML_Logger{
 						"</kml>"
 				);
 		try
-		{ /////sava file .kml
+		{ 
 			String fileName = "data/"+this.stage + ".kml";
 			PrintWriter pw = new PrintWriter(new File(fileName));
 			pw.write(info.toString());
 			pw.close();
-			
+
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}	
-
 	}
+
+
+}

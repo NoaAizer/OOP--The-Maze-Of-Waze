@@ -3,8 +3,8 @@ package elements;
 import java.util.List;
 
 import Server.game_service;
+import algorithms.Game_Algo;
 import dataStructure.DGraph;
-import gameClient.Game_Algo;
 
 public class Arena {
 	private int fruits;

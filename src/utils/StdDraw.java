@@ -1,9 +1,8 @@
 package utils;
 
-import gameClient.Game_Algo;
 import gameClient.MoveManual;
 import gameClient.MyGameGUI;
-
+import algorithms.Game_Algo;
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 

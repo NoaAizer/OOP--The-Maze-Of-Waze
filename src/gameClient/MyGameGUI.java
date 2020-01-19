@@ -3,7 +3,6 @@ package gameClient;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 
 
@@ -11,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import Server.Game_Server;
 import Server.game_service;
+import algorithms.Game_Algo;
 import dataStructure.*;
 import elements.*;
 import utils.*;
@@ -156,8 +156,7 @@ public class MyGameGUI implements Runnable {
 			int nodeKey = (Integer)JOptionPane.showInputDialog(null, "Pick a node to place the robot:", 
 					"Add Robot:", JOptionPane.QUESTION_MESSAGE, null, options, null);
 			arena.getGame().addRobot(nodeKey);
-			Date date=new Date();
-			kml.addPlaceMark(date, "robot", arena.getG().getNode(nodeKey).getLocation());
+			kml.addPlaceMark("robot", arena.getG().getNode(nodeKey).getLocation());
 			}catch(Exception e) {};
 
 		}
@@ -233,7 +232,7 @@ public class MyGameGUI implements Runnable {
 		{
 			Robot r=arena.getRobotsList().get(i);
 			Point3D src=r.getPos();
-			StdDraw.picture(src.x(), src.y(), "data/rob.png",0.0015,0.0009);
+			StdDraw.picture(src.x(), src.y(), "data/robot.png",0.0015,0.0009);
 		}
 	}
 
@@ -253,21 +252,24 @@ public class MyGameGUI implements Runnable {
 	public void run() 
 	{
 		arena.getGame().startGame();
-		kml = new KML_Logger(scenario_num);
+		kml = new KML_Logger(scenario_num,arena.getGame().timeToEnd());
 		int index=0;
+
 		while(arena.getGame().isRunning())
 		{
+			for (node_data node : arena.getG().getV()) {
+				kml.addPlaceMark("node", node.getLocation());
+			for(edge_data edge: arena.getG().getE(node.getKey()))
+				kml.addEdge(node.getLocation(), arena.getG().getNode(edge.getDest()).getLocation());
+			}
 			if(mode==1)
 				Game_Algo.moveRobotsAuto(arena.getGame(),arena.getG(),arena.getFruitsList());
 			else
 				StdDraw.manMode=true;
-			for (node_data node : arena.getG().getV()) {
-				Date date = new Date();
-				kml.addPlaceMark(date, "node", node.getLocation());
-			}
+
 			try
 			{
-				Thread.sleep(10);
+				Thread.sleep(49);
 				if(index%2==0)
 					repaint();
 
