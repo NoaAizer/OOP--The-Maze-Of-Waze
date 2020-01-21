@@ -2,6 +2,7 @@ package utils;
 
 import gameClient.MoveManual;
 import gameClient.MyGameGUI;
+import gameClient.SimpleDB;
 import algorithms.Game_Algo;
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
@@ -732,26 +733,28 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 	// create the menu bar (changed to private)
 
-	//	@SuppressWarnings("deprecation")
 	@SuppressWarnings("deprecation")
 	private static JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu1 = new JMenu("File");
-		//		JMenu menu2 = new JMenu("Algo");
+		JMenu menu2 = new JMenu("Information");
 		menuBar.add(menu1);
-		//		menuBar.add(menu2);
+		menuBar.add(menu2);
 		JMenuItem item1f = new JMenuItem("Save image");
-		//		JMenuItem item2f = new JMenuItem("Load Graph");
-		//		JMenuItem item3f = new JMenuItem("Save Graph_file");
+		JMenuItem item2i = new JMenuItem("Get your statistics");
+		JMenuItem item3i = new JMenuItem("Get your positions");
+
 		item1f.addActionListener(std);
-		//		item2f.addActionListener(std);
+		item2i.addActionListener(std);
+		item3i.addActionListener(std);
 		//		item3f.addActionListener(std);
 		item1f.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		//		item2f.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 		//				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-				menu1.add(item1f);
-		//		menu1.add(item2f);
+		menu1.add(item1f);
+		menu2.add(item2i);
+		menu2.add(item3i);
 		//		menu1.add(item3f);
 		//		JMenuItem item1a = new JMenuItem("Is_Connected");
 		//		JMenuItem item2a = new JMenuItem("shortestPathDist");
@@ -1710,6 +1713,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 	public void actionPerformed(ActionEvent e) {
 		String str = e.getActionCommand();
+
 		if(str.startsWith("Save image")) {
 			FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
 			chooser.setVisible(true);
@@ -1718,132 +1722,21 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				StdDraw.save(chooser.getDirectory() + File.separator + chooser.getFile());
 			}
 		}
-		//
-		//		if(str.startsWith("Load")) {
-		//			FileDialog chooser = new FileDialog(StdDraw.frame, "Loading graph file", FileDialog.LOAD);
-		//			chooser.setVisible(true);
-		//			String filename = chooser.getFile();
-		//			if (filename != null) {
-		//				StdDraw.load(chooser.getDirectory() + File.separator + chooser.getFile());
-		//				gui.update();
-		//			}
-		//		}
-		//
-		//		if(str.startsWith("Save Graph")) {
-		//
-		//			String filename = JOptionPane.showInputDialog(null, "Input a file name:");
-		//			if (filename != null) {
-		//				graph.save(filename);
-		//			}
-		//
-		//		}
-		//		if (str.equals("Is_Connected")){
-		//			boolean ans=graph.isConnected();
-		//			if(ans)
-		//				JOptionPane.showMessageDialog(null,"The graph is connecnted!");
-		//			else
-		//				JOptionPane.showMessageDialog(null,"The graph is not connecnted!");
-		//
-		//		}
-		//		if (str.equals("shortestPathDist")) {
-		//			Collection<node_data> arr_n= graph.getG().getV();
-		//			Integer[] options= new Integer [arr_n.size()];
-		//			int i=0;
-		//			for (node_data n : arr_n) {
-		//				options[i]= n.getKey();
-		//				i++;
-		//			}
-		//			try {
-		//				int src = (Integer)JOptionPane.showInputDialog(null, "Pick a source node:", 
-		//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-		//				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
-		//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-		//
-		//				double ans=graph.shortestPathDist(src,dest);
-		//				if(ans !=Double.POSITIVE_INFINITY)
-		//				{
-		//					JOptionPane.showMessageDialog(null,"The shortest path distance is:\n "+ans,"shortest path points "+src+"-"+dest, JOptionPane.INFORMATION_MESSAGE);
-		//				}
-		//				else 
-		//				{
-		//					JOptionPane.showMessageDialog(null,"Error, There is no path between the points!", "shortest path points \"+src+\"-\"+dst", JOptionPane.INFORMATION_MESSAGE);	
-		//				}
-		//			}
-		//			catch(Exception ex) {
-		//			}
-		//		}
-		//		if (str.equals("shortestPath")) {
-		//			Collection<node_data> arr_n= graph.getG().getV();
-		//			Integer[] options= new Integer [arr_n.size()];
-		//			int i=0;
-		//			for (node_data n : arr_n) {
-		//				options[i]= n.getKey();
-		//				i++;
-		//			}
-		//			try {
-		//				int src = (Integer)JOptionPane.showInputDialog(null, "Pick a source node:", 
-		//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-		//				int dest = (Integer)JOptionPane.showInputDialog(null, "Pick a destination node:", 
-		//						"Pick a node:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-		//
-		//				List<node_data> ans=graph.shortestPath(src, dest);
-		//
-		//				if(ans != null)
-		//				{
-		//					String ans_keys="";
-		//					for (node_data n : ans) {
-		//						if(!n.equals(ans.get(ans.size()-1)))
-		//							ans_keys+=n.getKey()+"->";
-		//						else
-		//							ans_keys+=n.getKey();
-		//					}
-		//					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"shortest path points "+src+"-"+dest, JOptionPane.INFORMATION_MESSAGE);
-		//				}
-		//				else 
-		//				{
-		//					JOptionPane.showMessageDialog(null,"Error: There is no path between the points :", "shortest path points \"+src+\"-\"+dst", JOptionPane.INFORMATION_MESSAGE);	
-		//				}
-		//			}
-		//			catch(Exception ex) {
-		//
-		//			}
-		//		}
-		//		//		if(str.equals("TSP")) {
-		//		//
-		//		//			if(keys.size() <= 1) {
-		//		//				JOptionPane.showMessageDialog(null, "Please pick at least 2 nodes on the frame\n and then press TSP again! ","Error", JOptionPane.ERROR_MESSAGE);
-		//		//				gui.init((DGraph) graph.getG());
-		//		//				gui.update();
-		//		//			}
-		//		//			else {
-		//		//
-		//		//				JOptionPane.showMessageDialog(null,"The node you have selected:\n "+keys,"TSP", JOptionPane.INFORMATION_MESSAGE);
-		//		//				List<Integer> targets = new ArrayList<Integer>();
-		//		//				targets.addAll(keys);
-		//		//				List<node_data> ans = graph.TSP(targets);
-		//		//
-		//		//				if(ans != null)
-		//		//				{
-		//		//					String ans_keys="";
-		//		//					for (node_data n : ans) {
-		//		//						if(!n.equals(ans.get(ans.size()-1)))
-		//		//							ans_keys+=n.getKey()+"->";
-		//		//						else
-		//		//							ans_keys+=n.getKey();
-		//		//					}
-		//		//					JOptionPane.showMessageDialog(null,"The shortest path is:\n "+ans_keys,"TSP result", JOptionPane.INFORMATION_MESSAGE);
-		//		//				}
-		//		//				else 
-		//		//				{
-		//		//					JOptionPane.showMessageDialog(null,"Error: There is no path between all those points :", "TSP result", JOptionPane.INFORMATION_MESSAGE);	
-		//		//				}
-		//		//				gui.init((DGraph) graph.getG());
-		//		//				gui.update();
-		//		//				StdDraw.show();
-		//		//				keys.clear();
-		//		//			}
-		//		//		}
-		//
+		if(str.startsWith("Get your statistics")) {
+			StringBuilder ans = new StringBuilder("\n");
+			for(int i=0;i<=SimpleDB.highestLevel;i++)
+				ans.append("Level "+i+": "+SimpleDB.highestGrades[i]+"\n");
+			JOptionPane.showMessageDialog(null, "You have played "+SimpleDB.numOfGames+ " games\n"+
+					"Your current Level: "+SimpleDB.highestLevel+ "\n"+
+					"Your best grades: "+ans
+					,"Statistics", JOptionPane.CLOSED_OPTION);
+		}
+		if(str.startsWith("Get your pos")) {
+			StringBuilder ans = new StringBuilder("\n");
+			for(int i=0;i<SimpleDB.positions[0].length;i++)
+				ans.append("Level "+SimpleDB.positions[0][i]+": "+SimpleDB.positions[1][i]+"\n");
+			JOptionPane.showMessageDialog(null, "Your positions: "+ans ,"Positions", JOptionPane.CLOSED_OPTION);
+		}
 	}
 
 

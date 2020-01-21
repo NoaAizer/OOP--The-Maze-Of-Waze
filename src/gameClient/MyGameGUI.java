@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -25,6 +25,7 @@ public class MyGameGUI implements Runnable {
 	private double maxX=Double.NEGATIVE_INFINITY;
 	private double maxY=Double.NEGATIVE_INFINITY;
 	private int mode;
+	public int id;
 	public static KML_Logger kml;
 
 
@@ -76,6 +77,8 @@ public class MyGameGUI implements Runnable {
 	 * Initializes the level ,the mode and the game and draws the graph.
 	 */
 	private void init() {
+		this.id=Integer.parseInt(JOptionPane.showInputDialog("Enter your ID:"));
+		SimpleDB.getDetails(this.id);
 		this.scenario_num=pickScenario(24);
 		if(this.scenario_num==-1)return;
 		game_service game=Game_Server.getServer(scenario_num);
@@ -145,7 +148,7 @@ public class MyGameGUI implements Runnable {
 			return scenario_num;
 		}
 		catch(Exception e) {e.getStackTrace();};
-	return -1;
+		return -1;
 	}
 	/**
 	 * Asks the user to pick the mode he wants to play. (Manual or Auto)
@@ -154,18 +157,18 @@ public class MyGameGUI implements Runnable {
 	public static int pickMode() {
 		String[] options = new String[] {"Manual", "Auto"};
 		try {
-		int ans = JOptionPane.showOptionDialog(null, "Pick a mode to play:", "Game Mode",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-				null, options, options[0]);
-		return ans;
+			int ans = JOptionPane.showOptionDialog(null, "Pick a mode to play:", "Game Mode",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+					null, options, options[0]);
+			return ans;
 		}catch(Exception e) {e.getStackTrace();};
 		return -1;
 	}
-	
+
 	/**
 	 * Asks the user to pick a node to put the robot on. (In manual mode)
 	 */
-	
+
 	public void PickARobotPlace()
 	{
 		int numOfRobots=arena.getRobots();
@@ -178,18 +181,18 @@ public class MyGameGUI implements Runnable {
 		}
 		for(int i=1;i<=numOfRobots;i++) {
 			try {
-			int nodeKey = (Integer)JOptionPane.showInputDialog(null, "Pick a node to place the robot:", 
-					"Add Robot:", JOptionPane.QUESTION_MESSAGE, null, options, null);
-			arena.getGame().addRobot(nodeKey);
-			kml.addPlaceMark("robot", arena.getG().getNode(nodeKey).getLocation());
+				int nodeKey = (Integer)JOptionPane.showInputDialog(null, "Pick a node to place the robot:", 
+						"Add Robot:", JOptionPane.QUESTION_MESSAGE, null, options, null);
+				arena.getGame().addRobot(nodeKey);
+				kml.addPlaceMark("robot", arena.getG().getNode(nodeKey).getLocation());
 			}catch(Exception e) {};
 
 		}
 		arena.setRobotsList(Game_Algo.createRobotsList());
 	}
-/**
- * Updates the frame painting.
- */
+	/**
+	 * Updates the frame painting.
+	 */
 	public void repaint()
 	{
 		StdDraw.clear();
@@ -283,13 +286,12 @@ public class MyGameGUI implements Runnable {
 		arena.getGame().startGame();
 		kml = new KML_Logger(scenario_num,arena.getGame().timeToEnd());
 		int index=0;
-
 		while(arena.getGame().isRunning())
 		{
 			for (node_data node : arena.getG().getV()) {
 				kml.addPlaceMark("node", node.getLocation());
-			for(edge_data edge: arena.getG().getE(node.getKey()))
-				kml.addEdge(node.getLocation(), arena.getG().getNode(edge.getDest()).getLocation());
+				for(edge_data edge: arena.getG().getE(node.getKey()))
+					kml.addEdge(node.getLocation(), arena.getG().getNode(edge.getDest()).getLocation());
 			}
 			if(mode==1)
 				Game_Algo.moveRobotsAuto(arena.getGame(),arena.getG(),arena.getFruitsList());
@@ -298,13 +300,15 @@ public class MyGameGUI implements Runnable {
 
 			try
 			{
-				Thread.sleep(49);
+				List<String> stat = arena.getGame().getRobots();
+				for(int i=0;i<stat.size();i++) 
+					System.out.println(index+") "+stat.get(i));
+				Thread.sleep(105);
 				if(index%2==0)
 					repaint();
 
-				
+
 				index++;
-				//kml.addPlaceMark(date, id, location);
 			}
 			catch(InterruptedException e)
 			{
@@ -312,7 +316,10 @@ public class MyGameGUI implements Runnable {
 			}
 		}
 		kml.kmlEnd();
-		System.out.println(Game_Algo.updateMoves());
+		String res = arena.getGame().toString();
+		//String remark = "This string should be a KML file!!";
+		arena.getGame().sendKML(kml.toString()); // Should be your KML (will not work on case -1).
+		System.out.println(res);
 		JOptionPane.showMessageDialog(null, "Game Over! \nYou earned "+Game_Algo.updateGrade()+ " points"
 				,"Finish", JOptionPane.CLOSED_OPTION);
 	}
