@@ -17,10 +17,10 @@ public class Arena {
 	private DGraph g=new DGraph();;
 	private game_service game;
 
-/**
- * Initializes the game , graph, fruits list and robots list of the arena from a given game.
- * @param game represents the given game service.
- */
+	/**
+	 * Initializes the game , graph, fruits list and robots list of the arena from a given game.
+	 * @param game represents the given game service.
+	 */
 	public void init(game_service game) {
 		this.game=game;
 		this.fruitsList=Game_Algo.createFruitsList();
@@ -34,10 +34,10 @@ public class Arena {
 	public game_service getGame() {
 		return game;
 	}
-/**
- * Fruits getter.
- * @return the amount of fruits in the arena.
- */
+	/**
+	 * Fruits getter.
+	 * @return the amount of fruits in the arena.
+	 */
 	public int getFruits() {
 		return fruits;
 	}
@@ -48,10 +48,10 @@ public class Arena {
 	public int getMoves() {
 		return moves;
 	}
-/**
- * Grade getter.
- * @return the current grade of the game.
- */
+	/**
+	 * Grade getter.
+	 * @return the current grade of the game.
+	 */
 	public int getGrade() {
 		return grade;
 	}
@@ -63,10 +63,10 @@ public class Arena {
 	public int getRobots() {
 		return robots;
 	}
-/**
- * Graph getter.
- * @return the graph file name.
- */
+	/**
+	 * Graph getter.
+	 * @return the graph file name.
+	 */
 	public String getGraph() {
 		return graph;
 	}
@@ -85,15 +85,15 @@ public class Arena {
 	public void setFruitsList(List<Fruit> fruits) {
 		this.fruitsList=fruits;
 	}
-	
-/**
- * Fruits list Getter.
- * @return the fruits list of the game.
- */
+
+	/**
+	 * Fruits list Getter.
+	 * @return the fruits list of the game.
+	 */
 	public List<Fruit> getFruitsList(){
 		return this.fruitsList; 
 	}
-	
+
 	/**
 	 * Robots list Getter.
 	 * @return the robots list of the game.
@@ -101,7 +101,7 @@ public class Arena {
 	public List<Robot> getRobotsList(){
 		return this.robotsList;
 	}
-	
+
 	/**
 	 * Graph getter.
 	 * @return the graph of the game.
@@ -117,5 +117,4 @@ public class Arena {
 		this.g=gr;
 
 	}
-
 }

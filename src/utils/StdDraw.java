@@ -1726,7 +1726,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			StringBuilder ans = new StringBuilder("\n");
 			for(int i=0;i<=SimpleDB.highestLevel;i++)
 				ans.append("Level "+i+": "+SimpleDB.highestGrades[i]+"\n");
-			JOptionPane.showMessageDialog(null, "You have played "+SimpleDB.numOfGames+ " games\n"+
+			JOptionPane.showMessageDialog(null, "You have played "+SimpleDB.numOfGames+ " games.\n"+
 					"Your current Level: "+SimpleDB.highestLevel+ "\n"+
 					"Your best grades: "+ans
 					,"Statistics", JOptionPane.CLOSED_OPTION);

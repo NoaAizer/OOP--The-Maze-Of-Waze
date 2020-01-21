@@ -3,6 +3,7 @@ package gameClient;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,14 +19,13 @@ import utils.*;
 public class MyGameGUI implements Runnable {
 
 
-	private int scenario_num;
+	public static int scenario_num;
 	public static Arena arena= new Arena();
 	private double minX=Double.POSITIVE_INFINITY;
 	private double minY=Double.POSITIVE_INFINITY;
 	private double maxX=Double.NEGATIVE_INFINITY;
 	private double maxY=Double.NEGATIVE_INFINITY;
 	private int mode;
-	public int id;
 	public static KML_Logger kml;
 
 
@@ -34,7 +34,7 @@ public class MyGameGUI implements Runnable {
 	 */
 	public MyGameGUI() {
 		init();
-		if(this.scenario_num==-1||this.mode==-1)return;
+		if(scenario_num==-1||this.mode==-1)return;
 		StdDraw.enableDoubleBuffering();
 		drawGraph();
 		drawFruits();
@@ -53,7 +53,7 @@ public class MyGameGUI implements Runnable {
 	 * @param sc_num represents the given scenario number.
 	 */
 	public MyGameGUI(int sc_num) {
-		this.scenario_num=sc_num;
+		scenario_num=sc_num;
 		game_service game=Game_Server.getServer(scenario_num);
 		this.mode=1;
 		arena=Game_Algo.createArenaFromJson(game.toString());
@@ -77,10 +77,9 @@ public class MyGameGUI implements Runnable {
 	 * Initializes the level ,the mode and the game and draws the graph.
 	 */
 	private void init() {
-		this.id=Integer.parseInt(JOptionPane.showInputDialog("Enter your ID:"));
-		SimpleDB.getDetails(this.id);
-		this.scenario_num=pickScenario(24);
-		if(this.scenario_num==-1)return;
+
+		scenario_num=pickScenario(24);
+		if(scenario_num==-1)return;
 		game_service game=Game_Server.getServer(scenario_num);
 		this.mode=pickMode();//0=manual , 1=auto
 		if(this.mode==-1)return;
@@ -277,12 +276,14 @@ public class MyGameGUI implements Runnable {
 		StdDraw.show();
 
 	}
-	public int getScnum()
-	{
-		return this.scenario_num;
-	}
+
 	public void run() 
 	{
+		int dt=49;
+		HashMap<Integer,Integer> casesList= new HashMap<>();
+		casesList.put(0, 99); casesList.put(1, 99); casesList.put(3, 99); casesList.put(5, 120); 
+		casesList.put(9, 99); casesList.put(11, 99);casesList.put(13, 99);casesList.put(16, 92);
+		casesList.put(19, 95); casesList.put(20, 95); casesList.put(23, 44); 
 		arena.getGame().startGame();
 		kml = new KML_Logger(scenario_num,arena.getGame().timeToEnd());
 		int index=0;
@@ -294,7 +295,7 @@ public class MyGameGUI implements Runnable {
 					kml.addEdge(node.getLocation(), arena.getG().getNode(edge.getDest()).getLocation());
 			}
 			if(mode==1)
-				Game_Algo.moveRobotsAuto(arena.getGame(),arena.getG(),arena.getFruitsList());
+				Game_Algo.moveRobotsAuto(arena.getGame(),arena.getG());
 			else
 				StdDraw.manMode=true;
 
@@ -303,7 +304,10 @@ public class MyGameGUI implements Runnable {
 				List<String> stat = arena.getGame().getRobots();
 				for(int i=0;i<stat.size();i++) 
 					System.out.println(index+") "+stat.get(i));
-				Thread.sleep(105);
+				if(casesList.containsKey(scenario_num))
+					dt=casesList.get(scenario_num);
+
+				Thread.sleep(dt);
 				if(index%2==0)
 					repaint();
 
@@ -316,12 +320,11 @@ public class MyGameGUI implements Runnable {
 			}
 		}
 		kml.kmlEnd();
+		arena.getGame().sendKML(kml.toString()); 
 		String res = arena.getGame().toString();
-		//String remark = "This string should be a KML file!!";
-		arena.getGame().sendKML(kml.toString()); // Should be your KML (will not work on case -1).
 		System.out.println(res);
-		JOptionPane.showMessageDialog(null, "Game Over! \nYou earned "+Game_Algo.updateGrade()+ " points"
-				,"Finish", JOptionPane.CLOSED_OPTION);
+		JOptionPane.showMessageDialog(null, "Game Over! \nYou earned "+Game_Algo.updateGrade()+ " points with "
+				+Game_Algo.updateMoves()+ " moves.","Finish", JOptionPane.CLOSED_OPTION);
 	}
 	public static void main(String[] args) {
 	}

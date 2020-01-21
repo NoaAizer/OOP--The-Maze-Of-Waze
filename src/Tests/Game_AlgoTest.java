@@ -24,7 +24,7 @@ import utils.Point3D;
 public class Game_AlgoTest {
 
 	static MyGameGUI mg= new MyGameGUI(3);
-	static game_service game=Game_Server.getServer(mg.getScnum());
+	static game_service game=Game_Server.getServer(MyGameGUI.scenario_num);
 	static Arena arena=Game_Algo.createArenaFromJson(game.toString());
 
 

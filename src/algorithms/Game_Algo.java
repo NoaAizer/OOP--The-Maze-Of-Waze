@@ -141,6 +141,22 @@ public class Game_Algo {
 	 */
 	public static void autoRobotLocation()
 	{
+
+		if(MyGameGUI.scenario_num==16)
+		{
+			MyGameGUI.arena.getGame().addRobot(10);
+			MyGameGUI.arena.getGame().addRobot(6);
+			MyGameGUI.arena.setRobotsList(Game_Algo.createRobotsList());
+			return;
+		}
+		if(MyGameGUI.scenario_num==23)
+		{
+			MyGameGUI.arena.getGame().addRobot(32);
+			MyGameGUI.arena.getGame().addRobot(40);
+			MyGameGUI.arena.getGame().addRobot(7);
+			MyGameGUI.arena.setRobotsList(Game_Algo.createRobotsList());
+			return;
+		}
 		List<Fruit> fruits=MyGameGUI.arena.getFruitsList();
 		Collections.sort(fruits);// sort the fruits by their values (from high to low).
 		int numOfFruits=fruits.size();
@@ -163,9 +179,8 @@ public class Game_Algo {
 	 * Move the robots in an auto mode. Each robot goes to the closest fruit which unselected by another robot.
 	 * @param game represents the game server
 	 * @param g represents the game graph.
-	 * @param fruits represents the list of the fruit in the game.
 	 */
-	public static void moveRobotsAuto(game_service game , DGraph g, List<Fruit>fruits) {
+	public static void moveRobotsAuto(game_service game , DGraph g) {
 		ArrayList<Integer> chosenDest= new ArrayList<Integer>();
 		algo= new Graph_Algo(g);
 		List<String> log = game.move();
