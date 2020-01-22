@@ -52,9 +52,12 @@ We have created 5 JUNIT test (using JUNIT 5 version).<br />
 In this package you will find the KML files and the elemnents images.<br />
 
 **Lib:**<br />
-java-json.jar<br />
 GameServer_v0.27.jar<br />
+GameServer_v0.32.jar<br />
+GameServer_v0.33.jar<br />
+java-json.jar<br />
 gson-2.8.6.jar<br />
+mysql-connector-java-5.1.47.jar<br />
 
 An explanation of the game and an extension of each package in the project can be found at WIKI.<br />
 
