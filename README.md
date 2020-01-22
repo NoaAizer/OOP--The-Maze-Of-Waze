@@ -53,8 +53,6 @@ We have created 5 JUNIT test (using JUNIT 5 version).<br />
 In this package you will find the KML files and the elemnents images.<br />
 
 **Lib:**<br />
-GameServer_v0.27.jar<br />
-GameServer_v0.32.jar<br />
 GameServer_v0.33.jar<br />
 java-json.jar<br />
 gson-2.8.6.jar<br />
