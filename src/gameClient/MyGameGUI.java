@@ -77,14 +77,16 @@ public class MyGameGUI implements Runnable {
 	 * Initializes the level ,the mode and the game and draws the graph.
 	 */
 	private void init() {
-
-		scenario_num=pickScenario(24);
+		game_service game=Game_Server.getServer(-1);
+		arena=Game_Algo.createArenaFromJson(game.toString());
+		scenario_num=pickScenario(arena.getMax_user_level()+1);
 		if(scenario_num==-1)return;
-		game_service game=Game_Server.getServer(scenario_num);
+		game=Game_Server.getServer(scenario_num);
 		this.mode=pickMode();//0=manual , 1=auto
 		if(this.mode==-1)return;
 		arena=Game_Algo.createArenaFromJson(game.toString());
 		arena.init(game);
+
 		StdDraw.initGraph(arena.getG());
 		initSize();
 
@@ -321,6 +323,8 @@ public class MyGameGUI implements Runnable {
 		}
 		kml.kmlEnd();
 		arena.getGame().sendKML(kml.toString()); 
+		SimpleDB.getDetails(Ex4_Client.id);
+		SimpleDB.getPositions(Ex4_Client.id);
 		String res = arena.getGame().toString();
 		System.out.println(res);
 		JOptionPane.showMessageDialog(null, "Game Over! \nYou earned "+Game_Algo.updateGrade()+ " points with "

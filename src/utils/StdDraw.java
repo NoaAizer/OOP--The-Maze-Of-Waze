@@ -1723,6 +1723,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			}
 		}
 		if(str.startsWith("Get your statistics")) {
+	
 			StringBuilder ans = new StringBuilder("\n");
 			for(int i=0;i<=SimpleDB.highestLevel;i++)
 				ans.append("Level "+i+": "+SimpleDB.highestGrades[i]+"\n");
@@ -1732,6 +1733,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 					,"Statistics", JOptionPane.CLOSED_OPTION);
 		}
 		if(str.startsWith("Get your pos")) {
+
 			StringBuilder ans = new StringBuilder("\n");
 			for(int i=0;i<SimpleDB.positions[0].length;i++)
 				ans.append("Level "+SimpleDB.positions[0][i]+": "+SimpleDB.positions[1][i]+"\n");

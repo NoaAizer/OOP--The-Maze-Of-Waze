@@ -12,6 +12,10 @@ public class Arena {
 	private int grade;
 	private int robots;
 	private String graph;
+	private int max_user_level;
+	public void setMax_user_level(int max_user_level) {
+		this.max_user_level = max_user_level;
+	}
 	private List<Fruit> fruitsList;
 	private List<Robot> robotsList;
 	private DGraph g=new DGraph();;
@@ -116,5 +120,12 @@ public class Arena {
 	public void setG(DGraph gr) {
 		this.g=gr;
 
+	}
+	/**
+	 * Max user level getter
+	 * @return the highest level the user can play.
+	 */
+	public int getMax_user_level() {
+		return max_user_level;
 	}
 }
