@@ -36,10 +36,11 @@ In the project we have 8 packages:<br />
 * Arena<br />
 
 **GameClient:**<br />
+* Ex4_Client- this class IS the "main" method running the whole project. In order to start playing the game you need to run this class.<br />
 * KML_Logger- Converting the game to a KML file.<br />
 * MoveManual- A thread used for moving the robots manually (The manually moving was also conducted in StdDraw class).<br />
 * MyGameGUI- Displaying of the game in JAVA (Using StdDraw).<br />
-* SimpleGameClient- this class IS the "main" method running the whole project. In order to start playing the game you need to run this class.<br />
+* SimpleDB- This class represents a simple example of using MySQL Data-Base.<br />
 
 **Tests:**<br />
 We have created 5 JUNIT test (using JUNIT 5 version).<br />
