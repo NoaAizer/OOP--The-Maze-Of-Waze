@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -168,6 +168,7 @@ public class SimpleDB {
 	 */
 	public static void getPositions(int id){
 		// init the current positions is these level to be 0.
+
 		positions= new int[][] {{0,1,3,5,9,11,13,16,19,20,23},{0,0,0,0,0,0,0,0,0,0,0}};
 		String allCustomersQuery2="SELECT * FROM Logs where levelID="+0+" order by score DESC;";
 		try {
@@ -180,16 +181,21 @@ public class SimpleDB {
 			int position;
 			for(int i=0;i<positions[0].length;i++) {
 				int currLevel=positions[0][i];
+				ArrayList <Integer>ids= new ArrayList<>();
 				position=1;
 				allCustomersQuery2 = "SELECT * FROM Logs where levelID="+currLevel+" order by score DESC;";
 				Class.forName("com.mysql.jdbc.Driver");
 				resultSet2 = statement.executeQuery(allCustomersQuery2);
 				while(resultSet2.next()&&resultSet2.getInt("score")>highestGrades[currLevel]) {
+					if(!ids.contains(resultSet2.getInt("UserID"))) {// the user best score has already found
 					if(!passedLevels.containsKey(currLevel)) 
 						position++;
 					else if(passedLevels.get(currLevel)[0]<=resultSet2.getInt("score")&&
 							passedLevels.get(currLevel)[1]>=resultSet2.getInt("moves")) 
 						position++;
+					ids.add(resultSet2.getInt("UserID"));
+					}
+					
 				}
 				positions[1][i]=position;
 			}

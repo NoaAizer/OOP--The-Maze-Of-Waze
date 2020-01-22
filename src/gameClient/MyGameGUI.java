@@ -77,9 +77,9 @@ public class MyGameGUI implements Runnable {
 	 * Initializes the level ,the mode and the game and draws the graph.
 	 */
 	private void init() {
-		game_service game=Game_Server.getServer(-1);
+		game_service game=Game_Server.getServer(0);
 		arena=Game_Algo.createArenaFromJson(game.toString());
-		scenario_num=pickScenario(arena.getMax_user_level()+1);
+		scenario_num=pickScenario(Math.max(1, arena.getMax_user_level()+1));
 		if(scenario_num==-1)return;
 		game=Game_Server.getServer(scenario_num);
 		this.mode=pickMode();//0=manual , 1=auto
