@@ -14,6 +14,13 @@ public class KML_Logger {
 	private long gameLong;
 	private int stage;
 	private StringBuilder info;
+	/**
+	 * Info Getter
+	 * @return the written file text.
+	 */
+	public String getInfo() {
+		return info.toString();
+	}
 
 	/**
 	 * Create a KML file of the given game.
@@ -128,26 +135,21 @@ public class KML_Logger {
 	 */
 	public void kmlEnd()
 	{
-		String[] options = new String[] {"Yes", "No"};
-		int ans = JOptionPane.showOptionDialog(null, "Do you want to save as a KML file?:", "KML file",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-				null, options, options[0]);
-		if(ans==0) {
-			info.append(
-					"  \r\n</Document>\r\n" +
-							"</kml>"
-					);
-			try
-			{ 
-				String fileName = "data/"+this.stage + ".kml";
-				PrintWriter pw = new PrintWriter(new File(fileName));
-				pw.write(info.toString());
-				pw.close();
-System.out.println("file saved");
 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+		info.append(
+				"  \r\n</Document>\r\n" +
+						"</kml>"
+				);
+		try
+		{ 
+			String fileName = "data/"+this.stage + ".kml";
+			PrintWriter pw = new PrintWriter(new File(fileName));
+			pw.write(info.toString());
+			pw.close();
+			System.out.println("file saved");
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 

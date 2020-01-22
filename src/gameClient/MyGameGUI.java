@@ -321,8 +321,15 @@ public class MyGameGUI implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		kml.kmlEnd();
-		arena.getGame().sendKML(kml.toString()); 
+
+		String[] options = new String[] {"Yes", "No"};
+		int ans = JOptionPane.showOptionDialog(null, "Do you want to save and send your KML file?:", "KML file",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, options[0]);
+		if(ans==0) {//if yes
+			kml.kmlEnd();
+			arena.getGame().sendKML(kml.getInfo()); 
+		}
 		SimpleDB.getDetails(Ex4_Client.id);
 		SimpleDB.getPositions(Ex4_Client.id);
 		String res = arena.getGame().toString();

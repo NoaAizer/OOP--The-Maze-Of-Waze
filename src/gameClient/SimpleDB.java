@@ -29,13 +29,13 @@ public class SimpleDB {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int id1 = 999;  // "dummy existing ID  
-		int level = 9;
-		allUsers();
-		printLog();
+		int id1 = 315242412;  // "dummy existing ID  
+		int level = 16;
+		//allUsers();
+		//printLog();
 		String kml = getKML(id1,level);
 		System.out.println("***** KML file example: ******");
-		System.out.println(kml);
+		System.out.println(kml.toString());
 	}
 
 	/**
